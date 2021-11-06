@@ -11,9 +11,13 @@ POST http://localhost:3000/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-	"name": "Nejc",
 	"email":"nejc@gmail.com",
-	"password": "Nejc123!"
+	"password": "Nejc123!",
+	"profile_image": "undefined",
+	"first_name": "Nejc",
+	"last_name": "Rogla",
+	"email_token": "nekaj",
+	"confirmed": false
 }
 
 ###
