@@ -2,15 +2,25 @@ import { Type, Static } from '@sinclair/typebox'
 import { RouteShorthandOptions } from 'fastify'
 
 const RegisterRequest = Type.Object({
-	name: Type.String(),
 	email: Type.String({ format: 'email' }),
-	password: Type.String()
+	profile_image: Type.String(),
+	first_name: Type.String(),
+	last_name: Type.String(),
+	email_token: Type.String(),
+	confirmed: Type.Boolean(),
+	password: Type.String(),
+	created_at: Type.String({format:'date'}),
+	updated_at: Type.String({format:'date'}),
 })
 
 const RegisterResponse = Type.Object({
 	token: Type.String(),
-	name: Type.String(),
-	email: Type.String({ format: 'email' })
+	user: Type.Object({
+		email: Type.String({ format: 'email' }),
+		profile_image: Type.String(),
+		first_name: Type.String(),
+		last_name: Type.String()
+	}),
 })
 
 export const RegisterOpts: RouteShorthandOptions = {
