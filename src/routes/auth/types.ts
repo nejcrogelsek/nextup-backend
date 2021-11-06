@@ -9,8 +9,8 @@ const RegisterRequest = Type.Object({
 	email_token: Type.String(),
 	confirmed: Type.Boolean(),
 	password: Type.String(),
-	created_at: Type.String({format:'date'}),
-	updated_at: Type.String({format:'date'}),
+	created_at: Type.String({format:'date-time'}),
+	updated_at: Type.String({format:'date-time'}),
 })
 
 const RegisterResponse = Type.Object({
