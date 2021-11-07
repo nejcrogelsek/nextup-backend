@@ -3,7 +3,7 @@ import { UpdateOpts, UpdateBody, GetOpts, GetOneOpts, DeleteEventOpts } from './
 import * as bcrypt from 'bcrypt'
 import { IUser } from "../../interfaces/user.interface"
 
-const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
+const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.get('/', GetOpts, async (_, reply) => {
 		const events = await fastify.store.Event.find()
 		if (!events) {
@@ -64,4 +64,4 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 }
 
-export default auth;
+export default users;
