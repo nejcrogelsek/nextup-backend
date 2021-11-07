@@ -1,7 +1,8 @@
 import { FastifyPluginAsync } from "fastify"
 import { Error } from "mongoose"
+import { IEvent } from "../../interfaces/event.interface"
 import { IEventSchema } from "../../interfaces/schema.interface"
-import { AddBody, AddOpts, BookEventBody, BookEventOpts, UpdateBody, UpdateOpts } from './types'
+import { AddBody, AddOpts, BookEventBody, BookEventOpts, DeleteEventOpts, UpdateBody, UpdateOpts } from './types'
 
 const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.addHook('onRequest', async (request, reply) => {
@@ -15,7 +16,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.post<{ Body: AddBody }>('/', AddOpts, async (request, reply) => {
 		const { user_id } = request.body
 		if ('user request id' !== user_id) {
-			return reply.getHttpError(404, 'Unauthorized access')
+			return reply.getHttpError(401, 'Unauthorized access')
 		}
 		const event = new fastify.store.Event({
 			...request.body,
@@ -41,7 +42,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 		if ('user request id' !== user_id && 'user request id' !== event.user_id) {
-			return reply.getHttpError(404, 'Unauthorized access')
+			return reply.getHttpError(401, 'Unauthorized access')
 		}
 
 		if (request.body.event_image) {
@@ -67,7 +68,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.post<{ Body: BookEventBody }>('/book/:id', BookEventOpts, async (request, reply) => {
 		const { user_id, event_id } = request.body
 		if ('user request id' !== user_id) {
-			return reply.getHttpError(404, 'Unauthorized access')
+			return reply.getHttpError(401, 'Unauthorized access')
 		}
 		const event = await fastify.store.Event.findOne({ _id: event_id })
 		if (!event) {
@@ -88,6 +89,23 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			return reply.status(201).send({ ...reservation.toObject() })
 		})
 
+		return reply
+	})
+
+	fastify.delete('/:id', DeleteEventOpts, async (request, reply) => {
+		const event = await fastify.store.Event.findOne({ _id: 'id from querystring' })
+		if (!event) {
+			return reply.getHttpError(404, 'Cannot find any events.')
+		}
+		if (event._id !== 'request user id') {
+			return reply.getHttpError(401, 'Unauthorized access')
+		}
+		event.remove((err: Error, event: IEvent) => {
+			if (err || !event) {
+				return reply.getHttpError(404, 'Cannot delete event.')
+			}
+			return reply.status(200).send({ ...event })
+		})
 		return reply
 	})
 }
