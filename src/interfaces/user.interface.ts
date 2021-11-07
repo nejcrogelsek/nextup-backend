@@ -4,6 +4,7 @@ export interface IUser {
 	first_name: string
 	last_name: string
 	email: string
+	email_token: string | null
 	confirmed: boolean
 	password: string
 	created_at: Date

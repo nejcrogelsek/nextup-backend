@@ -16,6 +16,7 @@
   "author": "Nejc Rogelšek",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^7.6.0",
     "@sinclair/typebox": "^0.20.5",
     "bcrypt": "^5.0.1",
     "fastify": "^3.0.0",
