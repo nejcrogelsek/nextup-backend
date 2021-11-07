@@ -31,6 +31,10 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 	fastify.post<{ Body: AddBody }>('/', AddOpts, async (request, reply) => {
 		const { user_id } = request.body
+		const user = await fastify.store.User.findOne({ _id: 'request user id' }) // i need to do find with relationship
+		if(!user){
+			return reply.getHttpError(404, 'Cannot add event because no users are found')
+		}
 		if ('user request id' !== user_id) {
 			return reply.getHttpError(401, 'Unauthorized access')
 		}
@@ -40,6 +44,8 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			created_at: new Date(),
 			updated_at: new Date(),
 		})
+		
+		//user.events.push(event.toObject())
 
 		event.save((err, event) => {
 			if (err || !event) {
