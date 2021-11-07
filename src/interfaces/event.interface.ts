@@ -1,4 +1,4 @@
-export interface IUser {
+export interface IEvent {
 	_id: string
 	title: string
 	desciption: string

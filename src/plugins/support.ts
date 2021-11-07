@@ -4,6 +4,8 @@ import * as mongoose from 'mongoose'
 import { IUser } from '../interfaces/user.interface'
 import fastifyJwt from 'fastify-jwt'
 import { fastifyRequestContextPlugin } from 'fastify-request-context'
+import { Event } from '../entities/event.entity'
+import { IEvent } from '../interfaces/event.interface'
 
 export interface SupportPluginOptions {
 	// Specify Support plugin options here
@@ -31,6 +33,7 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 	}).then(conn => {
 		fastify.decorate('store', {
 			User: conn.model('User', User),
+			Event: conn.model('Event', Event),
 			db: conn
 		})
 
@@ -46,13 +49,14 @@ declare module 'fastify' {
 		generateJwt: (email: string) => string
 		store: {
 			User: mongoose.Model<IUser>,
+			Event: mongoose.Model<IEvent>,
 			db: typeof mongoose
 		}
 	}
 }
 
 declare module "fastify-request-context" {
-	interface RequestCOntextData {
+	interface RequestContextData {
 		user: IUser
 	}
 }
