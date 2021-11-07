@@ -27,7 +27,7 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 
 
 	const db = await mongoose.connect('mongodb://root:example@localhost:27017', {
-		dbName: 'fastify-crash-course'
+		dbName: '03-Nejc-Rogelsek'
 	}).then(conn => {
 		fastify.decorate('store', {
 			User: conn.model('User', User),

@@ -7,9 +7,9 @@ export const Event = new Schema<IEventSchema>({
 	event_image: String,
 	location: String,
 	max_visitors: Number,
-	user_id: Number,
 	date_start: Date,
 	time_start: Date,
+	user_id: { type: Schema.Types.ObjectId, ref: 'User' },
 	created_at: Date,
 	updated_at: Date
 })

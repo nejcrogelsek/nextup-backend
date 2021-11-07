@@ -13,6 +13,7 @@ export const User = new Schema<IUserSchema>({
 	email_token: String,
 	confirmed: Boolean,
 	password: String,
+	events: [{ type: Schema.Types.ObjectId, ref:'Event' }],
 	created_at: Date,
 	updated_at: Date
 })
