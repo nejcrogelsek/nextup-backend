@@ -5,7 +5,7 @@ export interface IEvent {
 	location: string
 	event_image: string
 	max_visitors: number
-	user_id: number
+	user_id: string
 	date_start: Date,
 	time_start: Date,
 	created_at: Date

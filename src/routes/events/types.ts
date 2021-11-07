@@ -7,7 +7,7 @@ const AddRequest = Type.Object({
 	location: Type.String(),
 	event_image: Type.String(),
 	max_visitors: Type.Number({ minimum: 1 }),
-	user_id: Type.Number(),
+	user_id: Type.String(),
 	date_start: Type.String({ format: 'date-time' }),
 	time_start: Type.String({ format: 'time' }),
 	created_at: Type.String({ format: 'date-time' }),
@@ -21,7 +21,7 @@ const AddResponse = Type.Object({
 	location: Type.String(),
 	event_image: Type.String(),
 	max_visitors: Type.Number({ minimum: 1 }),
-	user_id: Type.Number(),
+	user_id: Type.String(),
 	date_start: Type.String({ format: 'date-time' }),
 	time_start: Type.String({ format: 'time' }),
 	created_at: Type.String({ format: 'date-time' }),
@@ -40,12 +40,13 @@ export const AddOpts: RouteShorthandOptions = {
 export type AddBody = Static<typeof AddRequest>
 
 const UpdateRequest = Type.Object({
+	_id: Type.String(),
 	title: Type.String(),
 	desciption: Type.String(),
 	location: Type.String(),
 	event_image: Type.Optional(Type.String()),
 	max_visitors: Type.Number({ minimum: 1 }),
-	user_id: Type.Number(),
+	user_id: Type.String(),
 	date_start: Type.String({ format: 'date-time' }),
 	time_start: Type.String({ format: 'time' }),
 })
