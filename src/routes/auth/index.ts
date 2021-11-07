@@ -3,7 +3,7 @@ import { RegisterOpts, RegisterBody, LoginOpts, LoginBody } from './types'
 import * as bcrypt from 'bcrypt'
 
 const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-	fastify.post<{ Body: RegisterBody }>('/register', RegisterOpts, async function (request, reply) {
+	fastify.post<{ Body: RegisterBody }>('/register', RegisterOpts, async (request, reply) => {
 		const { password } = request.body
 		const hash = await bcrypt.hash(password, 10)
 		const user = new fastify.store.User({
@@ -24,7 +24,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply
 	})
 
-	fastify.post<{ Body: LoginBody }>('/login', LoginOpts, async function (request, reply) {
+	fastify.post<{ Body: LoginBody }>('/login', LoginOpts, async (request, reply) => {
 		const { email, password } = request.body
 		const user = await fastify.store.User.findOne({ email })
 		if (!user) {

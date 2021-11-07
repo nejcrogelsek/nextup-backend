@@ -11,3 +11,10 @@ export interface IEvent {
 	created_at: Date
 	updated_at: Date
 }
+
+export interface IReservation {
+	_id: string,
+	user_id: string,
+	event_id: string,
+	created_at: Date
+}

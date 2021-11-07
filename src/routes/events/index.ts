@@ -1,8 +1,7 @@
 import { FastifyPluginAsync } from "fastify"
 import { Error } from "mongoose"
-import { IEvent } from "../../interfaces/event.interface"
 import { IEventSchema } from "../../interfaces/schema.interface"
-import { AddBody, AddOpts, UpdateBody, UpdateOpts } from './types'
+import { AddBody, AddOpts, BookEventBody, BookEventOpts, UpdateBody, UpdateOpts } from './types'
 
 const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.addHook('onRequest', async (request, reply) => {
@@ -13,7 +12,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		}
 	})
 
-	fastify.post<{ Body: AddBody }>('/', AddOpts, async function (request, reply) {
+	fastify.post<{ Body: AddBody }>('/', AddOpts, async (request, reply) => {
 		const { user_id } = request.body
 		if ('user request id' !== user_id) {
 			return reply.getHttpError(404, 'Unauthorized access')
@@ -35,7 +34,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply
 	})
 
-	fastify.patch<{ Body: UpdateBody }>('/', UpdateOpts, async function (request, reply) {
+	fastify.patch<{ Body: UpdateBody }>('/', UpdateOpts, async (request, reply) => {
 		const { _id, user_id } = request.body
 		const event = await fastify.store.Event.findOne({ _id })
 		if (!event) {
@@ -44,7 +43,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		if ('user request id' !== user_id && 'user request id' !== event.user_id) {
 			return reply.getHttpError(404, 'Unauthorized access')
 		}
-		// update event
+
 		if (request.body.event_image) {
 			event.event_image = request.body.event_image
 		}
@@ -60,6 +59,33 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 				return reply.getHttpError(404, 'Cannot update event.')
 			}
 			return reply.status(201).send({ ...event })
+		})
+
+		return reply
+	})
+
+	fastify.post<{ Body: BookEventBody }>('/book/:id', BookEventOpts, async (request, reply) => {
+		const { user_id, event_id } = request.body
+		if ('user request id' !== user_id) {
+			return reply.getHttpError(404, 'Unauthorized access')
+		}
+		const event = await fastify.store.Event.findOne({ _id: event_id })
+		if (!event) {
+			return reply.getHttpError(404, 'Cannot find any events.')
+		}
+		const reservation = new fastify.store.Reservation({
+			...request.body,
+			event_id: event._id,
+			user_id: 'user request id',
+			created_at: new Date()
+		})
+
+		reservation.save((err, reservation) => {
+			if (err || !reservation) {
+				return reply.getHttpError(404, 'Cannot add new reservation.')
+			}
+
+			return reply.status(201).send({ ...reservation.toObject() })
 		})
 
 		return reply

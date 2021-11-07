@@ -5,7 +5,8 @@ import { IUser } from '../interfaces/user.interface'
 import fastifyJwt from 'fastify-jwt'
 import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import { Event } from '../entities/event.entity'
-import { IEvent } from '../interfaces/event.interface'
+import { IEvent, IReservation } from '../interfaces/event.interface'
+import { Reservation } from '../entities/reservation.entity'
 
 export interface SupportPluginOptions {
 	// Specify Support plugin options here
@@ -34,6 +35,7 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 		fastify.decorate('store', {
 			User: conn.model('User', User),
 			Event: conn.model('Event', Event),
+			Reservation: conn.model('Reservation', Reservation),
 			db: conn
 		})
 
@@ -50,6 +52,7 @@ declare module 'fastify' {
 		store: {
 			User: mongoose.Model<IUser>,
 			Event: mongoose.Model<IEvent>,
+			Reservation: mongoose.Model<IReservation>,
 			db: typeof mongoose
 		}
 	}

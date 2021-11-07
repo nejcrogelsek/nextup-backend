@@ -61,3 +61,27 @@ export const UpdateOpts: RouteShorthandOptions = {
 }
 
 export type UpdateBody = Static<typeof UpdateRequest>
+
+const BookEventRequest = Type.Object({
+	user_id: Type.String(),
+	event_id: Type.String(),
+	created_at: Type.String({ format: 'date-time' })
+})
+
+const BookEventResponse = Type.Object({
+	_id: Type.String(),
+	user_id: Type.String(),
+	event_id: Type.String(),
+	created_at: Type.String({ format: 'date-time' })
+})
+
+export const BookEventOpts: RouteShorthandOptions = {
+	schema: {
+		body: BookEventRequest,
+		response: {
+			201: BookEventResponse
+		}
+	}
+}
+
+export type BookEventBody = Static<typeof BookEventRequest>
