@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from "fastify"
-import { RegisterOpts, RegisterBody, LoginOpts, LoginBody } from './types'
+import { RegisterOpts, RegisterBody, LoginOpts, LoginBody, VerifyEmailOpts, ProtectedRouteOpts } from './types'
 import * as bcrypt from 'bcrypt'
 import { randomBytes } from "crypto"
 import * as sgMail from '@sendgrid/mail'
@@ -66,6 +66,37 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		})
 
 		return reply
+	})
+
+	fastify.get('/verify-email', VerifyEmailOpts, async (request, reply) => {
+		const user = await fastify.store.User.findOne({
+			email_token: 'request.query.token.toString()'
+		})
+		if (!user) {
+			return reply.getHttpError(404, 'Token is invalid. Please contact us for assistance.')
+		}
+		user.email_token = null
+		user.confirmed = true
+
+		user.save((err, user) => {
+			if (err || !user) {
+				return reply.getHttpError('404', 'Cannot verify this user.')
+			}
+			return reply.status(200)
+		})
+
+		// response
+		// res.redirect('http://localhost:3000/login?message="Your email successfully validated. Now you can login."')
+
+		return reply
+	})
+
+	fastify.get('/protected', ProtectedRouteOpts, async (request, reply) => {
+		const user = fastify.store.User.findOne({ _id: 'request.user.id' })
+		if (!user) {
+			return reply.getHttpError('404', 'No users found.')
+		}
+		return reply.status(200).send({ ...user })
 	})
 }
 

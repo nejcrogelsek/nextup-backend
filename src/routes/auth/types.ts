@@ -9,8 +9,8 @@ const RegisterRequest = Type.Object({
 	email_token: Type.String(),
 	confirmed: Type.Boolean(),
 	password: Type.String(),
-	created_at: Type.String({format:'date-time'}),
-	updated_at: Type.String({format:'date-time'}),
+	created_at: Type.String({ format: 'date-time' }),
+	updated_at: Type.String({ format: 'date-time' }),
 })
 
 const RegisterResponse = Type.Object({
@@ -49,3 +49,19 @@ export const LoginOpts: RouteShorthandOptions = {
 }
 
 export type LoginBody = Static<typeof LoginRequest>
+
+export const VerifyEmailOpts: RouteShorthandOptions = {
+	schema: {
+		response: {
+			200: (): void => { }
+		}
+	}
+}
+
+export const ProtectedRouteOpts: RouteShorthandOptions = {
+	schema: {
+		response: {
+			200: (): void => { }
+		}
+	}
+}
