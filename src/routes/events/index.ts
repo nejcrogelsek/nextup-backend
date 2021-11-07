@@ -2,7 +2,7 @@ import { FastifyPluginAsync } from "fastify"
 import { Error } from "mongoose"
 import { IEvent } from "../../interfaces/event.interface"
 import { IEventSchema } from "../../interfaces/schema.interface"
-import { AddBody, AddOpts, BookEventBody, BookEventOpts, DeleteEventOpts, UpdateBody, UpdateOpts } from './types'
+import { AddBody, AddOpts, BookEventBody, BookEventOpts, DeleteEventOpts, GetOneOpts, GetOpts, UpdateBody, UpdateOpts } from './types'
 
 const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.addHook('onRequest', async (request, reply) => {
@@ -11,6 +11,22 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		} catch (error) {
 			return reply.send({ error })
 		}
+	})
+
+	fastify.get('/', GetOpts, async (_, reply) => {
+		const events = await fastify.store.Event.find()
+		if (!events) {
+			return reply.getHttpError(404, 'Cannot find any events.')
+		}
+		return reply.status(200).send({ ...events })
+	})
+
+	fastify.get('/:id', GetOneOpts, async (_, reply) => {
+		const event = await fastify.store.Event.findOne({ _id: 'id from query' })
+		if (!event) {
+			return reply.getHttpError(404, 'Cannot find any events.')
+		}
+		return reply.status(200).send({ ...event.toObject() })
 	})
 
 	fastify.post<{ Body: AddBody }>('/', AddOpts, async (request, reply) => {

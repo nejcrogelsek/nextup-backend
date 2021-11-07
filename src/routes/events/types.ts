@@ -96,3 +96,22 @@ export const DeleteEventOpts: RouteShorthandOptions = {
 		}
 	}
 }
+
+export const GetOpts: RouteShorthandOptions = {
+	schema: {
+		response: {
+			200: [AddResponse]
+		}
+	}
+}
+
+export const GetOneOpts: RouteShorthandOptions = {
+	schema: {
+		querystring: {
+			id: { type: 'string' }
+		},
+		response: {
+			200: AddResponse
+		}
+	}
+}
