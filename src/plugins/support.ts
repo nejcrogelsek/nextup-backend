@@ -29,7 +29,7 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 	})
 
 
-	const db = await mongoose.connect('mongodb://root:example@localhost:27017', {
+	const db = await mongoose.connect('mongodb://admin:pass@localhost:27017', {
 		dbName: '03-Nejc-Rogelsek'
 	}).then(conn => {
 		fastify.decorate('store', {
@@ -38,7 +38,7 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 			Reservation: conn.model('Reservation', Reservation),
 			db: conn
 		})
-
+		console.log('Database connected!')
 		return conn
 	}).catch(console.error)
 

@@ -5,19 +5,20 @@ import { IUser } from "../../interfaces/user.interface"
 
 const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.get('/', GetOpts, async (_, reply) => {
-		const events = await fastify.store.Event.find()
-		if (!events) {
-			return reply.getHttpError(404, 'Cannot find any events.')
-		}
-		return reply.status(200).send({ ...events })
+		// const users = await fastify.store.User.find()
+		// if (!users) {
+		// 	return reply.getHttpError(404, 'Cannot find any users.')
+		// }
+		// return reply.status(200).send({ ...users })
+		return reply.status(200).send({ users: true })
 	})
 
 	fastify.get('/:id', GetOneOpts, async (_, reply) => {
-		const event = await fastify.store.Event.findOne({ _id: 'id from query' })
-		if (!event) {
-			return reply.getHttpError(404, 'Cannot find any events.')
+		const user = await fastify.store.User.findOne({ _id: 'id from query' })
+		if (!user) {
+			return reply.getHttpError(404, 'Cannot find any users.')
 		}
-		return reply.status(200).send({ ...event.toObject() })
+		return reply.status(200).send({ ...user.toObject() })
 	})
 
 	fastify.patch<{ Body: UpdateBody }>('/:id', UpdateOpts, async (request, reply) => {
