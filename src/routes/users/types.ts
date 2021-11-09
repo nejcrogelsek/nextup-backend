@@ -43,6 +43,7 @@ export const DeleteEventOpts: RouteShorthandOptions = {
 	}
 }
 
+// not working for get
 export const GetOpts: RouteShorthandOptions = {
 	schema: {
 		response: {

@@ -6,11 +6,7 @@ const RegisterRequest = Type.Object({
 	profile_image: Type.String(),
 	first_name: Type.String(),
 	last_name: Type.String(),
-	email_token: Type.String(),
-	confirmed: Type.Boolean(),
-	password: Type.String(),
-	created_at: Type.String({ format: 'date-time' }),
-	updated_at: Type.String({ format: 'date-time' }),
+	password: Type.String()
 })
 
 const RegisterResponse = Type.Object({

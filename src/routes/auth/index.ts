@@ -8,12 +8,12 @@ sgMail.setApiKey('SG.OoEKNyiaQ2imhSZB7PgXOQ.XHy4LO0Tci5F1iz0tRLEv2RKAoiEVEYzQU9r
 
 const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.post<{ Body: RegisterBody }>('/register', RegisterOpts, async (request, reply) => {
-		console.log('nekaj')
 		const { password } = request.body
 		const hash = await bcrypt.hash(password, 10)
 		const user = new fastify.store.User({
 			...request.body,
 			password: hash,
+			confirmed: false,
 			email_token: randomBytes(64).toString('hex'),
 			created_at: new Date(),
 			updated_at: new Date()

@@ -1,19 +1,18 @@
 import { FastifyPluginAsync } from "fastify"
-import { UpdateOpts, UpdateBody, GetOpts, GetOneOpts, DeleteEventOpts } from './types'
+import { UpdateOpts, UpdateBody, DeleteEventOpts } from './types'
 import * as bcrypt from 'bcrypt'
 import { IUser } from "../../interfaces/user.interface"
 
 const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-	fastify.get('/', GetOpts, async (_, reply) => {
-		// const users = await fastify.store.User.find()
-		// if (!users) {
-		// 	return reply.getHttpError(404, 'Cannot find any users.')
-		// }
-		// return reply.status(200).send({ ...users })
-		return reply.status(200).send({ users: true })
+	fastify.get('/', async (_, reply) => {
+		const users = await fastify.store.User.find()
+		if (!users) {
+			return reply.getHttpError(404, 'Cannot find any users.')
+		}
+		return reply.status(200).send(users)
 	})
 
-	fastify.get('/:id', GetOneOpts, async (_, reply) => {
+	fastify.get('/:id', async (_, reply) => {
 		const user = await fastify.store.User.findOne({ _id: 'id from query' })
 		if (!user) {
 			return reply.getHttpError(404, 'Cannot find any users.')

@@ -97,6 +97,7 @@ export const DeleteEventOpts: RouteShorthandOptions = {
 	}
 }
 
+// not wokrking for get
 export const GetOpts: RouteShorthandOptions = {
 	schema: {
 		response: {
