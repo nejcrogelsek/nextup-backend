@@ -46,7 +46,7 @@ export const DeleteEventOpts: RouteShorthandOptions = {
 export const GetOpts: RouteShorthandOptions = {
 	schema: {
 		response: {
-			200: [UpdateResponse]
+			200: UpdateResponse
 		}
 	}
 }

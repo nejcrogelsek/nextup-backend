@@ -53,7 +53,7 @@ export type LoginBody = Static<typeof LoginRequest>
 export const VerifyEmailOpts: RouteShorthandOptions = {
 	schema: {
 		response: {
-			200: (): void => { }
+			200: {}
 		}
 	}
 }
@@ -61,7 +61,7 @@ export const VerifyEmailOpts: RouteShorthandOptions = {
 export const ProtectedRouteOpts: RouteShorthandOptions = {
 	schema: {
 		response: {
-			200: (): void => { }
+			200: {}
 		}
 	}
 }
