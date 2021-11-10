@@ -88,7 +88,7 @@ export type BookEventBody = Static<typeof BookEventRequest>
 
 export const DeleteEventOpts: RouteShorthandOptions = {
 	schema: {
-		querystring: {
+		params: {
 			id: { type: 'string' }
 		},
 		response: {
@@ -108,7 +108,7 @@ export const GetOpts: RouteShorthandOptions = {
 
 export const GetOneOpts: RouteShorthandOptions = {
 	schema: {
-		querystring: {
+		params: {
 			id: { type: 'string' }
 		},
 		response: {

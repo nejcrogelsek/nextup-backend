@@ -1,10 +1,10 @@
 import { FastifyPluginAsync } from "fastify"
-import { UpdateOpts, UpdateBody, DeleteEventOpts } from './types'
+import { UpdateOpts, UpdateBody, DeleteEventOpts, GetOneOpts } from './types'
 import * as bcrypt from 'bcrypt'
 import { IUser } from "../../interfaces/user.interface"
 
 const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-	fastify.get('/', async (_, reply) => {
+	fastify.get('/',  async (_, reply) => {
 		const users = await fastify.store.User.find()
 		if (!users) {
 			return reply.getHttpError(404, 'Cannot find any users.')
@@ -12,8 +12,9 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send(users)
 	})
 
-	fastify.get('/:id', async (_, reply) => {
-		const user = await fastify.store.User.findOne({ _id: 'id from query' })
+	fastify.get('/:id', GetOneOpts, async (request, reply) => {
+		const params = JSON.parse(JSON.stringify(request.params))
+		const user = await fastify.store.User.findOne({ _id: params.id }) // 618befee0658295b7ef2f407
 		if (!user) {
 			return reply.getHttpError(404, 'Cannot find any users.')
 		}
@@ -22,7 +23,8 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 	fastify.patch<{ Body: UpdateBody }>('/:id', UpdateOpts, async (request, reply) => {
 		const { password } = request.body
-		const user = await fastify.store.User.findOne({ _id: 'query id' })
+		const params = JSON.parse(JSON.stringify(request.params))
+		const user = await fastify.store.User.findOne({ _id: params.id })
 		if (!user) {
 			return reply.getHttpError(404, 'Cannot find any users.')
 		}
@@ -47,12 +49,10 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.delete('/:id', DeleteEventOpts, async (request, reply) => {
-		const user = await fastify.store.User.findOne({ _id: 'id from querystring' })
+		const params = JSON.parse(JSON.stringify(request.params))
+		const user = await fastify.store.User.findOne({ _id: params.id })
 		if (!user) {
 			return reply.getHttpError(404, 'Cannot find any users.')
-		}
-		if (user._id !== 'request user id') {
-			return reply.getHttpError(401, 'Unauthorized access')
 		}
 		user.remove((err: Error, user: IUser) => {
 			if (err || !user) {

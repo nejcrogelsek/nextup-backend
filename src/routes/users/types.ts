@@ -17,12 +17,15 @@ const UpdateResponse = Type.Object({
 	email_token: Type.String(),
 	confirmed: Type.Boolean(),
 	password: Type.String(),
-	created_at: Type.String({format:'date-time'}),
-	updated_at: Type.String({format:'date-time'}),
+	created_at: Type.String({ format: 'date-time' }),
+	updated_at: Type.String({ format: 'date-time' }),
 })
 
 export const UpdateOpts: RouteShorthandOptions = {
 	schema: {
+		params: {
+			id: { type: 'string' }
+		},
 		body: UpdateRequest,
 		response: {
 			201: UpdateResponse
@@ -34,7 +37,7 @@ export type UpdateBody = Static<typeof UpdateRequest>
 
 export const DeleteEventOpts: RouteShorthandOptions = {
 	schema: {
-		querystring: {
+		params: {
 			id: { type: 'string' }
 		},
 		response: {
@@ -54,7 +57,7 @@ export const GetOpts: RouteShorthandOptions = {
 
 export const GetOneOpts: RouteShorthandOptions = {
 	schema: {
-		querystring: {
+		params: {
 			id: { type: 'string' }
 		},
 		response: {

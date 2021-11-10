@@ -22,8 +22,9 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send(events)
 	})
 
-	fastify.get('/:id', async (_, reply) => {
-		const event = await fastify.store.Event.findOne({ _id: 'id from query' })
+	fastify.get('/:id', async (request, reply) => {
+		const params = JSON.parse(JSON.stringify(request.params))
+		const event = await fastify.store.Event.findOne({ _id: params.id })
 		if (!event) {
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
@@ -93,6 +94,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		if ('user request id' !== user_id) {
 			return reply.getHttpError(401, 'Unauthorized access')
 		}
+
 		const event = await fastify.store.Event.findOne({ _id: event_id })
 		if (!event) {
 			return reply.getHttpError(404, 'Cannot find any events.')
@@ -116,12 +118,13 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.delete('/:id', DeleteEventOpts, async (request, reply) => {
-		const event = await fastify.store.Event.findOne({ _id: 'id from querystring' })
+		const params = JSON.parse(JSON.stringify(request.params))
+		const event = await fastify.store.Event.findOne({ _id: params.id })
+		if (event?._id !== 'request user id') {
+			return reply.getHttpError(401, 'Unauthorized access')
+		}
 		if (!event) {
 			return reply.getHttpError(404, 'Cannot find any events.')
-		}
-		if (event._id !== 'request user id') {
-			return reply.getHttpError(401, 'Unauthorized access')
 		}
 		event.remove((err: Error, event: IEvent) => {
 			if (err || !event) {
