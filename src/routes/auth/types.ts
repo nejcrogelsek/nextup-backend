@@ -48,6 +48,9 @@ export type LoginBody = Static<typeof LoginRequest>
 
 export const VerifyEmailOpts: RouteShorthandOptions = {
 	schema: {
+		querystring: {
+			token: { type: 'string' }
+		},
 		response: {
 			200: {}
 		}

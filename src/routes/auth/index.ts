@@ -70,8 +70,9 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.get('/verify-email', VerifyEmailOpts, async (request, reply) => {
+		const query = JSON.parse(JSON.stringify(request.query))
 		const user = await fastify.store.User.findOne({
-			email_token: 'request.query.token.toString()'
+			email_token: query.token
 		})
 		if (!user) {
 			return reply.getHttpError(404, 'Token is invalid. Please contact us for assistance.')
@@ -86,10 +87,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			return reply.status(200)
 		})
 
-		// response
-		// res.redirect('http://localhost:3000/login?message="Your email successfully validated. Now you can login."')
-
-		return reply
+		return reply.redirect('http://localhost:3000/login?message="Your email successfully validated. Now you can login."')
 	})
 
 	fastify.get('/protected', ProtectedRouteOpts, async (request, reply) => {
