@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt'
 import { IUser } from "../../interfaces/user.interface"
 
 const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-	fastify.get('/',  async (_, reply) => {
+	fastify.get('/', async (_, reply) => {
 		const users = await fastify.store.User.find()
 		if (!users) {
 			return reply.getHttpError(404, 'Cannot find any users.')
@@ -45,6 +45,10 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			return reply.status(201).send({ ...user.toObject() })
 		})
 
+		return reply
+	})
+
+	fastify.get('/users/upload', async (request, reply) => {
 		return reply
 	})
 

@@ -19,6 +19,10 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			updated_at: new Date()
 		})
 
+		const newUser = await user.save()
+		if (!newUser) {
+			return reply.getHttpError('404', 'Cannot register new user.')
+		}
 		const msg = {
 			from: {
 				name: 'Nextup',
@@ -39,16 +43,8 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		`
 		}
 		await sgMail.send(msg)
-
-		user.save((err, user) => {
-			if (err || !user) {
-				return reply.getHttpError('404', 'Cannot register new user.')
-			}
-			const token = fastify.generateJwt(user.email)
-			return reply.status(201).send({ ...user.toObject(), token })
-		})
-
-		return reply
+		const token = fastify.generateJwt(user.email)
+		return reply.status(201).send({ user: newUser, token })
 	})
 
 	fastify.post<{ Body: LoginBody }>('/login', LoginOpts, async (request, reply) => {
@@ -58,15 +54,20 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			return reply.getHttpError(404, `User with email ${email} does not exist.`)
 		}
 
-		bcrypt.compare(password, user.password, (err, isValid) => {
-			if (err || !isValid) {
-				return reply.getHttpError(404, 'Invalid credentials.')
+		const isValid = bcrypt.compare(password, user.password)
+		if (!isValid) {
+			return reply.getHttpError(404, 'Invalid credentials.')
+		}
+		const token = fastify.generateJwt(email)
+		return reply.status(200).send({
+			token,
+			user: {
+				email: user.email,
+				first_name: user.first_name,
+				last_name: user.last_name,
+				profile_image: user.profile_image
 			}
-			const token = fastify.generateJwt(email)
-			return reply.status(200).send({ token, ...user.toObject() })
 		})
-
-		return reply
 	})
 
 	fastify.get('/verify-email', VerifyEmailOpts, async (request, reply) => {
@@ -80,14 +81,12 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		user.email_token = null
 		user.confirmed = true
 
-		user.save((err, user) => {
-			if (err || !user) {
-				return reply.getHttpError('404', 'Cannot verify this user.')
-			}
-			return reply.status(200)
-		})
+		user.save()
+		if (!user) {
+			return reply.getHttpError('404', 'Cannot verify this user.')
+		}
 
-		return reply.redirect('http://localhost:3000/login?message="Your email successfully validated. Now you can login."')
+		return reply.status(302).redirect('http://localhost:3001/login?message="Your email successfully validated. Now you can login."')
 	})
 
 	fastify.get('/protected', ProtectedRouteOpts, async (request, reply) => {

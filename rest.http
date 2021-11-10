@@ -6,7 +6,7 @@ POST http://localhost:3000/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-	"email":"nejcrogelsek10@gmail.com",
+	"email":"nejcrogelsek40@gmail.com",
 	"password": "Nejc123!",
 	"profile_image": "undefined",
 	"first_name": "Test",
@@ -14,14 +14,14 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/auth/verify-email?token=4581324cbb2723751a992aba813baf1c105a3c0de765fabc138675b68c214a5d159ceb6888bc25c265ff090e19e5ae702fb26bf00f9d190d9af0a6580e073b5b HTTP/1.1
+GET http://localhost:3000/auth/verify-email?token=69360bf66d1993e1c284103d6e2e231ae84f7a1ca2c3dfd378b0691829ea04305908600a6eaf5237c0eb2a6f7bf1691449b6efa7d2a1ebe0c659eb57268cbe42 HTTP/1.1
 
 ###
 POST http://localhost:3000/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-	"email":"nejcrogelsek0@gmail.com",
+	"email":"nejcrogelsek40@gmail.com",
 	"password": "Nejc123!"
 }
 
@@ -47,7 +47,7 @@ DELETE http://localhost:3000/users/618bf2e85c5850226c82c343 HTTP/1.1
 ### EVENTS
 GET http://localhost:3000/events HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer token34534534534
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5lamNyb2dlbHNlazQwQGdtYWlsLmNvbSIsImlhdCI6MTYzNjU3NjE1NywiZXhwIjoxNjM2NTc3MDU3fQ.bgaeiM97UAPsPgmwcW8ClP3FFGGLxRlkRdGbYEmO6sM
 
 ###
 GET http://localhost:3000/events/4439843789e9fefe9 HTTP/1.1
