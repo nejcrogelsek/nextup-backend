@@ -7,6 +7,8 @@ import { fastifyRequestContextPlugin } from 'fastify-request-context'
 import { Event } from '../entities/event.entity'
 import { IEvent, IReservation } from '../interfaces/event.interface'
 import { Reservation } from '../entities/reservation.entity'
+import { randomBytes } from 'crypto'
+import * as AWS from 'aws-sdk'
 
 export interface SupportPluginOptions {
 	// Specify Support plugin options here
@@ -28,6 +30,37 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 		return fastify.jwt.sign({ email })
 	})
 
+	fastify.decorate('generateUploadUrl', async () => {
+		try {
+			const bucketName = 'nextup-image-upload'
+			const region = 'eu-central-1'
+			const accessKeyId = 'AKIAUBFBQZEIWALO3O67'
+			const secretAccessKey = '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'
+
+			const s3 = new AWS.S3({
+				region,
+				accessKeyId,
+				secretAccessKey,
+				signatureVersion: 'v4'
+			})
+
+			const rawBytes = randomBytes(16)
+			const imageName = rawBytes.toString('hex')
+
+			const params = {
+				Bucket: bucketName,
+				Key: imageName,
+				Expires: 60
+			}
+
+			const uploadURL = await s3.getSignedUrlPromise('putObject', params)
+			return uploadURL
+		} catch (err) {
+			console.log(err)
+		} finally {
+			console.log('Getting a random user upload url from backend.')
+		}
+	})
 
 	const db = await mongoose.connect('mongodb://admin:pass@localhost:27017', {
 		dbName: '03-Nejc-Rogelsek'
@@ -49,6 +82,7 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 declare module 'fastify' {
 	export interface FastifyInstance {
 		generateJwt: (email: string) => string
+		generateUploadUrl: () => { url: string }
 		store: {
 			User: mongoose.Model<IUser>,
 			Event: mongoose.Model<IEvent>,
