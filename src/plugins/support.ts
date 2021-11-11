@@ -79,8 +79,8 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 		}
 	})
 
-	fastify.decorate('generateJwt', (email: string) => {
-		return fastify.jwt.sign({ email })
+	fastify.decorate('generateJwt', (email: string, id: string) => {
+		return fastify.jwt.sign({ email, id })
 	})
 
 	fastify.decorate('generateUploadUrl', async (): Promise<{ url: string }> => {
@@ -138,7 +138,7 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 // When using .decorate you have to specify added properties for Typescript
 declare module 'fastify' {
 	export interface FastifyInstance {
-		generateJwt: (email: string) => string
+		generateJwt: (email: string, id: string) => string
 		generateUploadUrl: () => { url: string }
 		store: {
 			User: mongoose.Model<IUser>,

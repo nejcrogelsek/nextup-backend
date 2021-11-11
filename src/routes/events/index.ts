@@ -5,7 +5,7 @@ import { IEventSchema } from "../../interfaces/schema.interface"
 import { AddBody, AddOpts, BookEventBody, BookEventOpts, DeleteEventOpts, UpdateBody, UpdateOpts } from './types'
 
 const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-	
+
 	fastify.addHook('onRequest', async (request, reply) => {
 		try {
 			await request.jwtVerify()
@@ -14,7 +14,8 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		}
 	})
 
-	fastify.get('/', async (_, reply) => {
+	fastify.get('/', async (request, reply) => {
+		console.log(JSON.parse(JSON.stringify(request.user)))
 		const events = await fastify.store.Event.find()
 		if (!events) {
 			return reply.getHttpError(404, 'Cannot find any events.')
@@ -22,41 +23,35 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send(events)
 	})
 
-	fastify.get('/:id', async (request, reply) => {
-		const params = JSON.parse(JSON.stringify(request.params))
-		const event = await fastify.store.Event.findOne({ _id: params.id })
-		if (!event) {
+	fastify.get('/added-events', async (request, reply) => {
+		const user = JSON.parse(JSON.stringify(request.user))
+		const events = await fastify.store.Event.find({ user_id: user.id })
+		if (!events) {
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
-		return reply.status(200).send({ ...event.toObject() })
+		return reply.status(200).send(events)
 	})
 
 	fastify.post<{ Body: AddBody }>('/', AddOpts, async (request, reply) => {
-		const { user_id } = request.body
-		const user = await fastify.store.User.findOne({ _id: 'request user id' }) // i need to do find with relationship
-		if(!user){
+		const requestUser = JSON.parse(JSON.stringify(request.user))
+		const user = await fastify.store.User.findOne({ _id: requestUser.id }) // i need to do find with relationship
+		if (!user) {
 			return reply.getHttpError(404, 'Cannot add event because no users are found')
-		}
-		if ('user request id' !== user_id) {
-			return reply.getHttpError(401, 'Unauthorized access')
 		}
 		const event = new fastify.store.Event({
 			...request.body,
-			user_id: request.user,
+			user_id: user._id,
 			created_at: new Date(),
 			updated_at: new Date(),
 		})
-		
+
 		//user.events.push(event.toObject())
 
-		event.save((err, event) => {
-			if (err || !event) {
-				return reply.getHttpError(404, 'Cannot add new event.')
-			}
-			return reply.status(201).send({ ...event.toObject() })
-		})
-
-		return reply
+		const newEvent = await event.save()
+		if (!newEvent) {
+			return reply.getHttpError(404, 'Cannot add new event.')
+		}
+		return reply.status(201).send({ ...event.toObject() })
 	})
 
 	fastify.patch<{ Body: UpdateBody }>('/', UpdateOpts, async (request, reply) => {

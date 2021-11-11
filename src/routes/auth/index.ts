@@ -43,7 +43,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		`
 		}
 		await sgMail.send(msg)
-		const token = fastify.generateJwt(user.email)
+		const token = fastify.generateJwt(user.email, user._id)
 		return reply.status(201).send({ user: newUser, token })
 	})
 
@@ -62,7 +62,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		if (!isValid) {
 			return reply.getHttpError(404, 'Invalid credentials.')
 		}
-		const token = fastify.generateJwt(email)
+		const token = fastify.generateJwt(email, user._id)
 		return reply.status(200).send({
 			token,
 			user: {
