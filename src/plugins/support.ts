@@ -9,6 +9,7 @@ import { IEvent, IReservation } from '../interfaces/event.interface'
 import { Reservation } from '../entities/reservation.entity'
 import { randomBytes } from 'crypto'
 import * as AWS from 'aws-sdk'
+import fastifyEnv from 'fastify-env'
 
 export interface SupportPluginOptions {
 	// Specify Support plugin options here
@@ -17,6 +18,48 @@ export interface SupportPluginOptions {
 // The use of fastify-plugin is required to be able
 // to export the decorators to the outer scope
 export default fp<SupportPluginOptions>(async (fastify, opts) => {
+	fastify.register(fastifyEnv, {
+		dotenv: true,
+		schema: {
+			type: 'object',
+			properties: {
+				AWS_BUCKET_NAME: {
+					type: 'string',
+					default: ''
+				},
+				AWS_REGION: {
+					type: 'string',
+					default: ''
+				},
+				AWS_ACCESS_KEY_ID: {
+					type: 'string',
+					default: ''
+				},
+				AWS_SECRET_ACCESS_KEY: {
+					type: 'string',
+					default: ''
+				},
+				JWT_SECRET: {
+					type: 'string',
+					default: ''
+				},
+				MONGODB_URL: {
+					type: 'string',
+					default: ''
+				},
+				MONGODB_NAME: {
+					type: 'string',
+					default: ''
+				},
+				SENDGRID_API_KEY: {
+					type: 'string',
+					default: ''
+				}
+			},
+			required: ['AWS_BUCKET_NAME', 'AWS_REGION', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'JWT_SECRET', 'MONGODB_URL', 'MONGODB_NAME', 'SENDGRID_API_KEY']
+		}
+	})
+
 	fastify.register(fastifyRequestContextPlugin)
 
 	fastify.register(fastifyJwt, {
@@ -32,10 +75,10 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 
 	fastify.decorate('generateUploadUrl', async () => {
 		try {
-			const bucketName = 'nextup-image-upload'
-			const region = 'eu-central-1'
-			const accessKeyId = 'AKIAUBFBQZEIWALO3O67'
-			const secretAccessKey = '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'
+			const bucketName = process.env.AWS_BUCKET_NAME
+			const region = process.env.AWS_REGION
+			const accessKeyId = process.env.AWS_ACCESS_KEY_ID
+			const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
 
 			const s3 = new AWS.S3({
 				region,
@@ -58,12 +101,12 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 		} catch (err) {
 			console.log(err)
 		} finally {
-			console.log('Getting a random user upload url from backend.')
+			console.log('Plugin generateUploadUrl running...')
 		}
 	})
 
 	const db = await mongoose.connect('mongodb://admin:pass@localhost:27017', {
-		dbName: '03-Nejc-Rogelsek'
+		dbName: process.env.MONGODB_NAME
 	}).then(conn => {
 		fastify.decorate('store', {
 			User: conn.model('User', User),
