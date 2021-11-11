@@ -105,7 +105,7 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 		}
 	})
 
-	const db = await mongoose.connect('mongodb://admin:pass@localhost:27017', {
+	const db = await mongoose.connect(process.env.MONGODB_URL!.toString(), {
 		dbName: process.env.MONGODB_NAME
 	}).then(conn => {
 		fastify.decorate('store', {
