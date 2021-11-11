@@ -1,4 +1,5 @@
 import { FastifyPluginAsync } from "fastify"
+import { UploadOpts } from "./types"
 
 const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
@@ -19,15 +20,13 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send({ ...event.toObject() })
 	})
 
-	fastify.get('/upload', async (_, reply) => {
-		try {
-			const { url } = fastify.generateUploadUrl()
-			return reply.status(200).send({ url: url })
-		} catch (err) {
-			return reply.getHttpError(404, JSON.stringify(err))
-		} finally {
-			console.log('Uploading a user profile picture.')
+	fastify.get('/upload', UploadOpts, async (_, reply) => {
+		console.log('Uploading a user profile picture.')
+		const { url } = await fastify.generateUploadUrl()
+		if (!url) {
+			return reply.getHttpError(404, 'No data received.')
 		}
+		return reply.status(200).send({ url: url })
 	})
 
 }

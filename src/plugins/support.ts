@@ -10,6 +10,7 @@ import { Reservation } from '../entities/reservation.entity'
 import { randomBytes } from 'crypto'
 import * as AWS from 'aws-sdk'
 import fastifyEnv from 'fastify-env'
+import fastifyCors from 'fastify-cors'
 
 export interface SupportPluginOptions {
 	// Specify Support plugin options here
@@ -39,6 +40,10 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 					type: 'string',
 					default: ''
 				},
+				AWS_SIGNATURE_VERSION: {
+					type: 'string',
+					default: ''
+				},
 				JWT_SECRET: {
 					type: 'string',
 					default: ''
@@ -56,8 +61,13 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 					default: ''
 				}
 			},
-			required: ['AWS_BUCKET_NAME', 'AWS_REGION', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'JWT_SECRET', 'MONGODB_URL', 'MONGODB_NAME', 'SENDGRID_API_KEY']
+			required: ['AWS_BUCKET_NAME', 'AWS_REGION', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_SIGNATURE_VERSION', 'JWT_SECRET', 'MONGODB_URL', 'MONGODB_NAME', 'SENDGRID_API_KEY']
 		}
+	})
+
+	fastify.register(fastifyCors, {
+		logLevel: 'debug',
+		origin: '*'
 	})
 
 	fastify.register(fastifyRequestContextPlugin)
@@ -73,7 +83,7 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 		return fastify.jwt.sign({ email })
 	})
 
-	fastify.decorate('generateUploadUrl', async () => {
+	fastify.decorate('generateUploadUrl', async (): Promise<{ url: string }> => {
 		try {
 			const bucketName = process.env.AWS_BUCKET_NAME
 			const region = process.env.AWS_REGION
@@ -97,11 +107,15 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 			}
 
 			const uploadURL = await s3.getSignedUrlPromise('putObject', params)
-			return uploadURL
+			if (!uploadURL) {
+				throw new Error('No data recevied.')
+			}
+			return { url: uploadURL }
 		} catch (err) {
 			console.log(err)
+			throw err
 		} finally {
-			console.log('Plugin generateUploadUrl running...')
+			console.log('Plugin generateUploadUrl')
 		}
 	})
 

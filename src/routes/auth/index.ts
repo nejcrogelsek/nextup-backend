@@ -49,12 +49,16 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 	fastify.post<{ Body: LoginBody }>('/login', LoginOpts, async (request, reply) => {
 		const { email, password } = request.body
+		console.log(request.body)
 		const user = await fastify.store.User.findOne({ email })
 		if (!user) {
 			return reply.getHttpError(404, `User with email ${email} does not exist.`)
 		}
 
-		const isValid = bcrypt.compare(password, user.password)
+		if (user.confirmed === false) {
+			return reply.getHttpError(404, 'Please confirm your email address.')
+		}
+		const isValid = await bcrypt.compare(password, user.password)
 		if (!isValid) {
 			return reply.getHttpError(404, 'Invalid credentials.')
 		}

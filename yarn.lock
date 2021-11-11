@@ -1455,6 +1455,14 @@ fastify-cli@^2.13.0:
     split2 "^3.1.1"
     yargs-parser "^20.0.0"
 
+fastify-cors@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/fastify-cors/-/fastify-cors-6.0.2.tgz#4fd5102549659e9b34d252fd7ee607b63d021390"
+  integrity sha512-sE0AOyzmj5hLLRRVgenjA6G2iOGX35/1S3QGYB9rr9TXelMZB3lFrXy4CzwYVOMiujJeMiLgO4J7eRm8sQSv8Q==
+  dependencies:
+    fastify-plugin "^3.0.0"
+    vary "^1.1.2"
+
 fastify-env@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/fastify-env/-/fastify-env-2.1.1.tgz#443cc8f9b443320bfd9330975606fdbb2ba2f799"
