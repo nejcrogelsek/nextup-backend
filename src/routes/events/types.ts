@@ -3,18 +3,18 @@ import { RouteShorthandOptions } from 'fastify'
 
 const AddRequest = Type.Object({
 	title: Type.String(),
-	desciption: Type.String(),
 	location: Type.String(),
 	event_image: Type.String(),
 	max_visitors: Type.Number({ minimum: 1 }),
 	date_start: Type.String(),
-	time_start: Type.String()
+	time_start: Type.String(),
+	description: Type.String()
 })
 
 const AddResponse = Type.Object({
 	_id: Type.String(),
 	title: Type.String(),
-	desciption: Type.String(),
+	description: Type.String(),
 	location: Type.String(),
 	event_image: Type.String(),
 	max_visitors: Type.Number({ minimum: 1 }),
@@ -39,7 +39,7 @@ export type AddBody = Static<typeof AddRequest>
 const UpdateRequest = Type.Object({
 	_id: Type.String(),
 	title: Type.String(),
-	desciption: Type.String(),
+	description: Type.String(),
 	location: Type.String(),
 	event_image: Type.Optional(Type.String()),
 	max_visitors: Type.Number({ minimum: 1 }),

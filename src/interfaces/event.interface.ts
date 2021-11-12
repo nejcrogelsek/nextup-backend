@@ -1,7 +1,7 @@
 export interface IEvent {
 	_id: string
 	title: string
-	desciption: string
+	description: string
 	location: string
 	event_image: string
 	max_visitors: number

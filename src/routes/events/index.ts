@@ -68,7 +68,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			event.event_image = request.body.event_image
 		}
 		event.title = request.body.title
-		event.desciption = request.body.desciption
+		event.description = request.body.description
 		event.location = request.body.location
 		event.max_visitors = request.body.max_visitors
 		event.date_start = new Date(request.body.date_start)
