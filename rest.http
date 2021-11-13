@@ -80,4 +80,7 @@ GET http://localhost:3000/public/upload HTTP/1.1
 GET http://localhost:3000/public/events HTTP/1.1
 
 ###
+GET http://localhost:3000/public/events/upcoming HTTP/1.1
+
+###
 GET http://localhost:3000/public/events/1 HTTP/1.1
