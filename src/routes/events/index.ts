@@ -23,6 +23,15 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send(events)
 	})
 
+	fastify.get('/reservations', async (request, reply) => {
+		console.log(JSON.parse(JSON.stringify(request.user)))
+		const reservations = await fastify.store.Reservation.find()
+		if (!reservations) {
+			return reply.getHttpError(404, 'Cannot find any reservations.')
+		}
+		return reply.status(200).send(reservations)
+	})
+
 	fastify.get('/added-events', async (request, reply) => {
 		const user = JSON.parse(JSON.stringify(request.user))
 		const events = await fastify.store.Event.find({ user_id: user.id })
@@ -84,9 +93,10 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply
 	})
 
-	fastify.post<{ Body: BookEventBody }>('/book/:id', BookEventOpts, async (request, reply) => {
-		const { user_id, event_id } = request.body
-		if ('user request id' !== user_id) {
+	fastify.post<{ Body: BookEventBody }>('/book', BookEventOpts, async (request, reply) => {
+		const user = JSON.parse(JSON.stringify(request.user))
+		const { event_id, user_id } = request.body
+		if (user.id !== user_id) {
 			return reply.getHttpError(401, 'Unauthorized access')
 		}
 
@@ -95,21 +105,17 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 		const reservation = new fastify.store.Reservation({
-			...request.body,
 			event_id: event._id,
-			user_id: 'user request id',
+			user_id: user.id,
 			created_at: new Date()
 		})
 
-		reservation.save((err, reservation) => {
-			if (err || !reservation) {
-				return reply.getHttpError(404, 'Cannot add new reservation.')
-			}
+		const newReservation = reservation.save()
+		if (!newReservation) {
+			return reply.getHttpError(404, 'Cannot add new reservation.')
+		}
 
-			return reply.status(201).send({ ...reservation.toObject() })
-		})
-
-		return reply
+		return reply.status(201).send({ ...reservation.toObject() })
 	})
 
 	fastify.delete('/:id', DeleteEventOpts, async (request, reply) => {

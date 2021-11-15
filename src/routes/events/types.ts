@@ -60,9 +60,8 @@ export const UpdateOpts: RouteShorthandOptions = {
 export type UpdateBody = Static<typeof UpdateRequest>
 
 const BookEventRequest = Type.Object({
-	user_id: Type.String(),
 	event_id: Type.String(),
-	created_at: Type.String({ format: 'date-time' })
+	user_id: Type.String()
 })
 
 const BookEventResponse = Type.Object({
