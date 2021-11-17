@@ -1,7 +1,8 @@
 import { FastifyPluginAsync } from "fastify"
-import { UpdateOpts, UpdateBody, DeleteEventOpts, GetOneOpts } from './types'
+import { UpdateOpts, UpdateBody, DeleteEventOpts } from './types'
 import * as bcrypt from 'bcrypt'
 import { IUser } from "../../interfaces/user.interface"
+import { Event } from "../../entities/event.entity"
 
 const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.get('/', async (_, reply) => {
@@ -12,9 +13,9 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send(users)
 	})
 
-	fastify.get('/:id', GetOneOpts, async (request, reply) => {
+	fastify.get('/:id', async (request, reply) => {
 		const params = JSON.parse(JSON.stringify(request.params))
-		const user = await fastify.store.User.findOne({ _id: params.id }) // 618befee0658295b7ef2f407
+		const user = await fastify.store.User.findOne({ _id: params.id }).populate('events', Event) // 618befee0658295b7ef2f407
 		if (!user) {
 			return reply.getHttpError(404, 'Cannot find any users.')
 		}

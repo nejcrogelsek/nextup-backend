@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from "fastify"
-import { RegisterOpts, RegisterBody, LoginOpts, LoginBody, VerifyEmailOpts, ProtectedRouteOpts } from './types'
+import { RegisterOpts, RegisterBody, LoginOpts, LoginBody, VerifyEmailOpts } from './types'
 import * as bcrypt from 'bcrypt'
 import { randomBytes } from "crypto"
 import * as sgMail from '@sendgrid/mail'
@@ -91,14 +91,6 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		}
 
 		return reply.status(302).redirect('http://localhost:3001/login?message="Your email successfully validated. Now you can login."')
-	})
-
-	fastify.get('/protected', ProtectedRouteOpts, async (request, reply) => {
-		const user = fastify.store.User.findOne({ _id: 'request.user.id' })
-		if (!user) {
-			return reply.getHttpError('404', 'No users found.')
-		}
-		return reply.status(200).send({ ...user })
 	})
 }
 

@@ -64,3 +64,23 @@ export const ProtectedRouteOpts: RouteShorthandOptions = {
 		}
 	}
 }
+
+const RefreshTokenRequest = Type.Object({
+	email: Type.String({ format: 'email' }),
+	id: Type.String()
+})
+
+const RefreshTokenResponse = Type.Object({
+	access_token: Type.String()
+})
+
+export const RefreshTokenOpts: RouteShorthandOptions = {
+	schema: {
+		body: RefreshTokenRequest,
+		response: {
+			201: RefreshTokenResponse
+		}
+	}
+}
+
+export type RefreshTokenBody = Static<typeof RefreshTokenRequest>

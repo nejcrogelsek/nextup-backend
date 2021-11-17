@@ -5,7 +5,6 @@ import { IEventSchema } from "../../interfaces/schema.interface"
 import { AddBody, AddOpts, BookEventBody, BookEventOpts, DeleteEventOpts, UpdateBody, UpdateOpts } from './types'
 
 const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-
 	fastify.addHook('onRequest', async (request, reply) => {
 		try {
 			await request.jwtVerify()

@@ -10,3 +10,12 @@ export interface IUser {
 	created_at: Date
 	updated_at: Date
 }
+export interface IToken {
+	email: string
+	id: string
+	iat: number
+	exp: number
+}
+export interface IAccessToken {
+	access_token: string
+}

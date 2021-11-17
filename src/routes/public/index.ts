@@ -2,7 +2,6 @@ import { FastifyPluginAsync } from "fastify"
 import { UploadOpts } from "./types"
 
 const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-
 	fastify.get('/events', async (_, reply) => {
 		const events = await fastify.store.Event.find()
 		if (!events) {
@@ -37,7 +36,6 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		}
 		return reply.status(200).send({ url: url })
 	})
-
 }
 
 export default shared;
