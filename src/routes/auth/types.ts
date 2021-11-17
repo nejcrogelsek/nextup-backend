@@ -1,6 +1,5 @@
 import { Type, Static } from '@sinclair/typebox'
 import { RouteShorthandOptions } from 'fastify'
-
 const RegisterRequest = Type.Object({
 	email: Type.String({ format: 'email' }),
 	profile_image: Type.String(),
