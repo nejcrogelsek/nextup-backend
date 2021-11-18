@@ -19,3 +19,11 @@ export interface IToken {
 export interface IAccessToken {
 	access_token: string
 }
+export type IUserClient = {
+	_id: number
+	email: string
+	first_name: string
+	last_name: string
+	profile_image: string
+	confirmed: boolean
+  }
