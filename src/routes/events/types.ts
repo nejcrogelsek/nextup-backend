@@ -7,7 +7,7 @@ const AddRequest = Type.Object({
 	event_image: Type.String(),
 	max_visitors: Type.Number({ minimum: 1 }),
 	date_start: Type.String({ format: 'date-time' }),
-	time_start: Type.String(),
+	time_start: Type.RegEx(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
 	description: Type.String()
 })
 
@@ -20,7 +20,7 @@ const AddResponse = Type.Object({
 	max_visitors: Type.Number(),
 	user_id: Type.String(),
 	date_start: Type.String({ format: 'date-time' }),
-	time_start: Type.String(),
+	time_start: Type.RegEx(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
 	created_at: Type.String({ format: 'date-time' }),
 	updated_at: Type.String({ format: 'date-time' }),
 })
@@ -45,7 +45,7 @@ const UpdateRequest = Type.Object({
 	max_visitors: Type.Number({ minimum: 1 }),
 	user_id: Type.String(),
 	date_start: Type.String({ format: 'date' }),
-	time_start: Type.String(),
+	time_start:Type.RegEx(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
 })
 
 export const UpdateOpts: RouteShorthandOptions = {

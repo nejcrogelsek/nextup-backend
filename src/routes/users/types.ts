@@ -5,7 +5,7 @@ const UpdateRequest = Type.Object({
 	email: Type.String({ format: 'email' }),
 	first_name: Type.String(),
 	last_name: Type.String(),
-	password: Type.Optional(Type.String())
+	password: Type.Optional(Type.RegEx(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/))
 })
 
 const UpdateResponse = Type.Object({

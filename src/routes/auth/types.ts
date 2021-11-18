@@ -5,7 +5,7 @@ const RegisterRequest = Type.Object({
 	profile_image: Type.String(),
 	first_name: Type.String(),
 	last_name: Type.String(),
-	password: Type.String()
+	password: Type.RegEx(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/)
 })
 
 const RegisterResponse = Type.Object({
@@ -31,7 +31,7 @@ export type RegisterBody = Static<typeof RegisterRequest>
 
 const LoginRequest = Type.Object({
 	email: Type.String({ format: 'email' }),
-	password: Type.String()
+	password: Type.RegEx(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/)
 })
 
 export const LoginOpts: RouteShorthandOptions = {

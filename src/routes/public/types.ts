@@ -18,7 +18,7 @@ const GetResponse = Type.Object({
 	max_visitors: Type.Number({ minimum: 1 }),
 	user_id: Type.String(),
 	date_start: Type.String({ format: 'date-time' }),
-	time_start: Type.String({ format: 'time' }),
+	time_start: Type.RegEx(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
 	created_at: Type.String({ format: 'date-time' }),
 	updated_at: Type.String({ format: 'date-time' }),
 })
