@@ -1,5 +1,8 @@
 import { FastifyPluginAsync } from "fastify"
 import { AddBody, AddOpts, BookEventBody, BookEventOpts, DeleteEventOpts, UpdateBody, UpdateOpts } from './types'
+import * as sgMail from '@sendgrid/mail'
+
+sgMail.setApiKey('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')
 
 const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.addHook('onRequest', async (request, reply) => {
@@ -29,7 +32,8 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 	fastify.post<{ Body: AddBody }>('/', AddOpts, async (request, reply) => {
 		const requestUser = JSON.parse(JSON.stringify(request.user))
-		const user = await fastify.store.User.findOne({ _id: requestUser.id }) // i need to do find with relationship
+		const users = await fastify.store.User.find()
+		const user = await fastify.store.User.findOne({ _id: requestUser.id })
 		if (!user) {
 			return reply.getHttpError(404, 'Cannot add event because no users are found')
 		}
@@ -40,12 +44,35 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			updated_at: new Date(),
 		})
 
-		//user.events.push(event.toObject())
-
 		const newEvent = await event.save()
 		if (!newEvent) {
 			return reply.getHttpError(404, 'Cannot add new event.')
 		}
+
+		let sendTo: string[] = []
+
+		for (let i = 0; i < users.length; i++) {
+			sendTo.push(users[i].email)
+		}
+
+		const msg = {
+			from: {
+				name: 'Nextup',
+				email: 'nejcrogelsek0@gmail.com'
+			},
+			to: sendTo,
+			subject: 'Nextup - New Event',
+			text: `
+		   Hello, new event is added.
+		`,
+			html: `
+			<h1>Hello</h1>
+			<p>New event is added on our site.</p>
+			<p>Click on the link below to checkout new event.</p>
+			<a href='http://localhost:3001/event/${request.body.title.replaceAll(' ', '-')}'>Verify your account</a>
+		`
+		}
+		await sgMail.send(msg)
 		return reply.status(201).send({ ...event.toObject() })
 	})
 
@@ -144,6 +171,22 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			return reply.getHttpError(404, 'Cannot find any reservations.')
 		}
 		return reply.status(200).send(reservations)
+	})
+
+	fastify.get('/:id/visitors', async (request, reply) => {
+		const params = JSON.parse(JSON.stringify(request.params))
+		const reservations = await fastify.store.Reservation.find({ event_id: params.id })
+		const event = await fastify.store.Event.findOne({ _id: params.id })
+
+		if (!event) {
+			return reply.getHttpError(404, 'Cannot find any events.')
+		}
+
+		if (event.max_visitors === reservations.length) {
+			return reply.status(200).send({ allowed: false })
+		}
+
+		return reply.status(200).send({ allowed: true })
 	})
 }
 
