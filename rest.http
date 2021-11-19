@@ -14,7 +14,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/auth/verify-email?token=641bec0b07581ece5ccf6598f0f1fc9215575a9665512c68f8b59bd5fc2d32358476e3686b0bafd3ea4c283f1f8d8df0e2da808da5efea80dbf41bf860e5539a HTTP/1.1
+GET http://localhost:3000/auth/verify-email?token=d09e74cb636e209199ee6d6e92f9e826026df295ee36de370d19ac578a1b3a4568ede394706f97229d439aecc3240b19dac9cce150ea8c3c25aa00dc696df538 HTTP/1.1
 
 ###
 POST http://localhost:3000/auth/login HTTP/1.1

@@ -39,7 +39,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			<h1>Hello</h1>
 			<p>Thanks for registering on our site.</p>
 			<p>Please click on the link below to verify your account.</p>
-			<a href='${request.protocol}://${request.hostname}:8080/auth/verify-email?token=${user.email_token}'>Verify your account</a>
+			<a href='${request.protocol}://${request.hostname}/auth/verify-email?token=${user.email_token}'>Verify your account</a>
 		`
 		}
 		await sgMail.send(msg)
@@ -89,7 +89,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		if (!user) {
 			return reply.getHttpError('404', 'Cannot verify this user.')
 		}
-
+		console.log('REDIRECT...')
 		return reply.status(302).redirect('http://localhost:3001/login?message="Your email successfully validated. Now you can login."')
 	})
 }
