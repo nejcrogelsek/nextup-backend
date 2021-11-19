@@ -14,6 +14,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.get('/', async (request, reply) => {
+		request.log.info('Searching for events.')
 		const events = await fastify.store.Event.find()
 		if (!events) {
 			return reply.getHttpError(404, 'Cannot find any events.')
@@ -22,6 +23,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.get('/added-events', async (request, reply) => {
+		request.log.info('Searching for events that logged in user added.')
 		const user = JSON.parse(JSON.stringify(request.user))
 		const events = await fastify.store.Event.find({ user_id: user.id })
 		if (!events) {
@@ -31,6 +33,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.post<{ Body: AddBody }>('/', AddOpts, async (request, reply) => {
+		request.log.info('Adding new event.')
 		const requestUser = JSON.parse(JSON.stringify(request.user))
 		const users = await fastify.store.User.find()
 		const user = await fastify.store.User.findOne({ _id: requestUser.id })
@@ -77,6 +80,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.patch<{ Body: UpdateBody }>('/', UpdateOpts, async (request, reply) => {
+		request.log.info('Updateing event.')
 		const user = JSON.parse(JSON.stringify(request.user))
 		const { _id, user_id } = request.body
 		const event = await fastify.store.Event.findOne({ _id })
@@ -105,6 +109,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.delete('/:id', DeleteEventOpts, async (request, reply) => {
+		request.log.info('Deleting event.')
 		const params = JSON.parse(JSON.stringify(request.params))
 		const event = await fastify.store.Event.findOne({ _id: params.id })
 		if (!event) {
@@ -118,6 +123,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.delete('/reservations/:id', async (request, reply) => {
+		request.log.info('Deleting reservation.')
 		const params = JSON.parse(JSON.stringify(request.params))
 		const reservation = await fastify.store.Reservation.findOne({ event_id: params.id })
 		if (!reservation) {
@@ -131,6 +137,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.post<{ Body: BookEventBody }>('/book', BookEventOpts, async (request, reply) => {
+		request.log.info('Adding new reservation.')
 		const user = JSON.parse(JSON.stringify(request.user))
 		const { event_id, user_id } = request.body
 		if (user.id !== user_id) {
@@ -156,6 +163,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.get('/reservations/:id', async (request, reply) => {
+		request.log.info('Checking if user already booked event.')
 		const user = JSON.parse(JSON.stringify(request.user))
 		const params = JSON.parse(JSON.stringify(request.params))
 		const reservations = await fastify.store.Reservation.findOne({ event_id: params.id, user_id: user.id })
@@ -166,6 +174,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.get('/reservations', async (request, reply) => {
+		request.log.info('Searching for reservations.')
 		const reservations = await fastify.store.Reservation.find()
 		if (!reservations) {
 			return reply.getHttpError(404, 'Cannot find any reservations.')
@@ -174,6 +183,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.get('/:id/visitors', async (request, reply) => {
+		request.log.info('Checking if event is full.')
 		const params = JSON.parse(JSON.stringify(request.params))
 		const reservations = await fastify.store.Reservation.find({ event_id: params.id })
 		const event = await fastify.store.Event.findOne({ _id: params.id })

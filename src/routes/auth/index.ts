@@ -8,6 +8,7 @@ sgMail.setApiKey('SG.OoEKNyiaQ2imhSZB7PgXOQ.XHy4LO0Tci5F1iz0tRLEv2RKAoiEVEYzQU9r
 
 const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.post<{ Body: RegisterBody }>('/register', RegisterOpts, async (request, reply) => {
+		request.log.info('Creating a new user.')
 		const { password } = request.body
 		const hash = await bcrypt.hash(password, 10)
 		const user = new fastify.store.User({
@@ -48,6 +49,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.post<{ Body: LoginBody }>('/login', LoginOpts, async (request, reply) => {
+		request.log.info('Logging user in application.')
 		const { email, password } = request.body
 		console.log(request.body)
 		const user = await fastify.store.User.findOne({ email })
@@ -75,6 +77,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.get('/verify-email', VerifyEmailOpts, async (request, reply) => {
+		request.log.info('Verifing user email address.')
 		const query = JSON.parse(JSON.stringify(request.query))
 		const user = await fastify.store.User.findOne({
 			email_token: query.token
@@ -89,7 +92,6 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		if (!user) {
 			return reply.getHttpError('404', 'Cannot verify this user.')
 		}
-		console.log('REDIRECT...')
 		return reply.status(302).redirect('http://localhost:3001/login?message="Your email successfully validated. Now you can login."')
 	})
 }

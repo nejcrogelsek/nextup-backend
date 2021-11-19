@@ -11,6 +11,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.post<{ Body: RefreshTokenBody }>('/refresh-token', async (request, reply) => {
+		request.log.info('Request refresh token')
 		const access_token = fastify.jwt.sign(request.body)
 		return reply.status(201).send({
 			access_token
@@ -19,6 +20,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.get('/protected', ProtectedRouteOpts, async (request, reply) => {
+		request.log.info('Request user data.')
 		const requested_user = JSON.parse(JSON.stringify(request.user))
 		const user = await fastify.store.User.findOne({ _id: requested_user.id })
 		if (!user) {

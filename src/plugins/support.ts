@@ -115,7 +115,7 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 			console.log(err)
 			throw err
 		} finally {
-			console.log('Plugin generateUploadUrl')
+			console.log('RUNNING: Plugin generateUploadUrl')
 		}
 	})
 

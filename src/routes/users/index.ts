@@ -5,7 +5,8 @@ import { IUser } from "../../interfaces/user.interface"
 import { Event } from "../../entities/event.entity"
 
 const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-	fastify.get('/', async (_, reply) => {
+	fastify.get('/', async (request, reply) => {
+		request.log.info('Searching for users.')
 		const users = await fastify.store.User.find()
 		if (!users) {
 			return reply.getHttpError(404, 'Cannot find any users.')
@@ -14,6 +15,7 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.get('/:id', async (request, reply) => {
+		request.log.info('Get specific user.')
 		const params = JSON.parse(JSON.stringify(request.params))
 		const user = await fastify.store.User.findOne({ _id: params.id }).populate('events', Event) // 618befee0658295b7ef2f407
 		if (!user) {
@@ -23,6 +25,7 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.patch<{ Body: UpdateBody }>('/:id', UpdateOpts, async (request, reply) => {
+		request.log.info('Updateing user.')
 		const { password } = request.body
 		const params = JSON.parse(JSON.stringify(request.params))
 		const user = await fastify.store.User.findOne({ _id: params.id })
@@ -49,11 +52,8 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply
 	})
 
-	fastify.get('/users/upload', async (request, reply) => {
-		return reply
-	})
-
 	fastify.delete('/:id', DeleteEventOpts, async (request, reply) => {
+		request.log.info('Deleting user.')
 		const params = JSON.parse(JSON.stringify(request.params))
 		const user = await fastify.store.User.findOne({ _id: params.id })
 		if (!user) {
