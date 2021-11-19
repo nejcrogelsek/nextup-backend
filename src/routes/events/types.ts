@@ -39,13 +39,13 @@ export type AddBody = Static<typeof AddRequest>
 const UpdateRequest = Type.Object({
 	_id: Type.String(),
 	title: Type.String(),
-	description: Type.String(),
 	location: Type.String(),
 	event_image: Type.Optional(Type.String()),
 	max_visitors: Type.Number({ minimum: 1 }),
-	user_id: Type.String(),
-	date_start: Type.String({ format: 'date' }),
-	time_start:Type.RegEx(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
+	date_start: Type.String({ format: 'date-time' }),
+	time_start: Type.RegEx(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
+	description: Type.String(),
+	user_id: Type.String()
 })
 
 export const UpdateOpts: RouteShorthandOptions = {

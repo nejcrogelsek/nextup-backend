@@ -69,7 +69,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		event.max_visitors = request.body.max_visitors
 		event.date_start = new Date(request.body.date_start)
 		event.time_start = new Date(request.body.time_start)
-		event.updated_at = new Date()
+		event.updated_at = new Date(Date.now())
 		const updatedEvent = await event.update()
 		if (!updatedEvent) {
 			return reply.getHttpError(404, 'Cannot update event.')
