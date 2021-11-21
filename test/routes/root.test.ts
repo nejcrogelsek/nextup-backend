@@ -1,11 +1,26 @@
-import { test } from 'tap'
+import { FastifyInstance } from 'fastify'
 import { build } from '../helper'
 
-test('default root route', async (t) => {
-  const app = await build(t)
+describe('RootTests', () => {
+	let app: FastifyInstance
 
-  const res = await app.inject({
-    url: '/'
-  })
-  t.same(JSON.parse(res.payload), { root: true })
+	beforeAll(async () => {
+		app = await build()
+	})
+
+	// Tear down our app after we are done
+	afterAll(async () => {
+		await app.close()
+	})
+
+
+	it('should return object', async () => {
+		const app = await build()
+
+		const res = await app.inject({
+			url: '/'
+		})
+		expect(JSON.parse(res.payload).toEqual({ root: true }))
+	})
+
 })

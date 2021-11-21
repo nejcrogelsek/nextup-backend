@@ -1,4 +1,5 @@
 import { FastifyPluginAsync } from "fastify"
+import { IEvent } from "../../interfaces/event.interface"
 import { UploadOpts } from "./types"
 
 const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
@@ -18,7 +19,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 
-		let upcomingEvents: Event[] = []
+		let upcomingEvents: IEvent[] = []
 		let tomorrow = new Date();
 		tomorrow.setDate(tomorrow.getDate() + 1);
 		for (let i = 0; i < events.length; i++) {
@@ -38,7 +39,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 
-		let recentEvents: Event[] = []
+		let recentEvents: IEvent[] = []
 		let tomorrow = new Date();
 		tomorrow.setDate(tomorrow.getDate() + 1);
 		for (let i = 0; i < events.length; i++) {
