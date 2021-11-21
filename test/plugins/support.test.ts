@@ -1,10 +1,22 @@
 import Fastify from 'fastify'
 import Support from '../../src/plugins/support'
 
-test('support works standalone', async () => {
+test('someSupport() - testing', async () => {
 	const fastify = Fastify()
 	void fastify.register(Support)
 	await fastify.ready()
 
-	expect(fastify.generateUploadUrl()).toEqual({ url: expect.any(String) })
+	expect(fastify.someSupport()).toBe('hugs')
+
+	await fastify.close()
+})
+
+test('generateUploadUrl', async () => {
+	const fastify = Fastify()
+	void fastify.register(Support)
+	await fastify.ready()
+
+	expect(fastify.generateUploadUrl()).toEqual(Promise.resolve({ url: expect.any(String) }))
+
+	await fastify.close()
 })

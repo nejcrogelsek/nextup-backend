@@ -20,6 +20,10 @@ export interface SupportPluginOptions {
 // The use of fastify-plugin is required to be able
 // to export the decorators to the outer scope
 export default fp<SupportPluginOptions>(async (fastify, opts) => {
+	fastify.decorate('someSupport', (): string => {
+		return 'hugs'
+	})
+
 	fastify.register(fastifyEnv, {
 		dotenv: true,
 		schema: {
@@ -143,6 +147,7 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 // When using .decorate you have to specify added properties for Typescript
 declare module 'fastify' {
 	export interface FastifyInstance {
+		someSupport: () => { url: string }
 		generateJwt: (email: string, id: string) => string
 		generateUploadUrl: () => { url: string }
 		store: {

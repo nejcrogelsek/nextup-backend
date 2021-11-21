@@ -15,8 +15,6 @@ describe('RootTests', () => {
 
 
 	it('should return object', async () => {
-		const app = await build()
-
 		const res = await app.inject({
 			url: '/'
 		})
