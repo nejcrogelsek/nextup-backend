@@ -11,6 +11,7 @@ import { randomBytes } from 'crypto'
 import * as AWS from 'aws-sdk'
 import fastifyEnv from 'fastify-env'
 import fastifyCors from 'fastify-cors'
+import * as cron from 'node-cron'
 
 export interface SupportPluginOptions {
 	// Specify Support plugin options here
@@ -133,6 +134,10 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 	}).catch(console.error)
 
 	if (!db) throw new Error('Cannot connect to database.')
+
+	if (process.env.NODE_ENV !== 'production') {
+		cron.schedule('0 14 * * 1', () => { /* send email function */ })
+	}
 })
 
 // When using .decorate you have to specify added properties for Typescript
