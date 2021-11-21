@@ -7,5 +7,5 @@ test('support works standalone', async (t) => {
   void fastify.register(Support)
   await fastify.ready()
 
-  t.equal(fastify.someSupport(), 'hugs')
+  t.equal(fastify.generateUploadUrl(), '')
 })
