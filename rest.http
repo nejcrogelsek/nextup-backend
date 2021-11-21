@@ -98,4 +98,7 @@ GET http://localhost:3000/public/events HTTP/1.1
 GET http://localhost:3000/public/events/upcoming HTTP/1.1
 
 ###
+GET http://localhost:3000/public/events/recent HTTP/1.1
+
+###
 GET http://localhost:3000/public/events/619131fe32d3b4b03c4b56d1 HTTP/1.1

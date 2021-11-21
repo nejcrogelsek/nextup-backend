@@ -75,7 +75,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			<a href='http://localhost:3001/event/${request.body.title.replaceAll(' ', '-')}'>Verify your account</a>
 		`
 		}
-		await sgMail.send(msg)
+		process.env.NODE_ENV !== ' test' ? await sgMail.send(msg) : null
 		return reply.status(201).send({ ...event.toObject() })
 	})
 

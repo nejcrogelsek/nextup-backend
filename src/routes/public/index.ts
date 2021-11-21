@@ -17,8 +17,38 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		if (!events) {
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
-		events.reverse()
-		return reply.status(200).send(events)
+
+		let upcomingEvents: Event[] = []
+		let tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
+		for (let i = 0; i < events.length; i++) {
+			const d = new Date(events[i].date_start).getTime()
+			if (d >= tomorrow.getTime()) {
+				upcomingEvents.push(events[i])
+			}
+		}
+		upcomingEvents.reverse()
+		return reply.status(200).send(upcomingEvents)
+	})
+	
+	fastify.get('/events/recent', async (request, reply) => {
+		request.log.info('Searching for recent events.')
+		const events = await fastify.store.Event.find()
+		if (!events) {
+			return reply.getHttpError(404, 'Cannot find any events.')
+		}
+
+		let recentEvents: Event[] = []
+		let tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
+		for (let i = 0; i < events.length; i++) {
+			const d = new Date(events[i].date_start).getTime()
+			if (d <= tomorrow.getTime()) {
+				recentEvents.push(events[i])
+			}
+		}
+		recentEvents.reverse()
+		return reply.status(200).send(recentEvents)
 	})
 
 	fastify.get('/events/:id', async (request, reply) => {
