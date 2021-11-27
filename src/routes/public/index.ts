@@ -23,7 +23,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		let tomorrow = new Date();
 		tomorrow.setDate(tomorrow.getDate() + 1);
 		for (let i = 0; i < events.length; i++) {
-			const d = new Date(events[i].date_start).getTime()
+			const d = new Date(events[i].date_start.split('.').reverse().join('-')).getTime()
 			if (d >= tomorrow.getTime()) {
 				upcomingEvents.push(events[i])
 			}
@@ -31,7 +31,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		upcomingEvents.reverse()
 		return reply.status(200).send(upcomingEvents)
 	})
-	
+
 	fastify.get('/events/recent', async (request, reply) => {
 		request.log.info('Searching for recent events.')
 		const events = await fastify.store.Event.find()
@@ -43,7 +43,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		let tomorrow = new Date();
 		tomorrow.setDate(tomorrow.getDate() + 1);
 		for (let i = 0; i < events.length; i++) {
-			const d = new Date(events[i].date_start).getTime()
+			const d = new Date(events[i].date_start.split('.').reverse().join('-')).getTime()
 			if (d <= tomorrow.getTime()) {
 				recentEvents.push(events[i])
 			}
@@ -61,6 +61,26 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		}
 		return reply.status(200).send({ ...event.toObject() })
 	})
+
+	fastify.get('/events/url/:url',
+		{
+			schema: {
+				querystring: {
+					q: { type: 'string' }
+				},
+				params: {
+					url: { type: 'string' }
+				}
+			}
+		}, async (request, reply) => {
+			const params = JSON.parse(JSON.stringify(request.params))
+			const query = JSON.parse(JSON.stringify(request.query)).q
+			const event = await fastify.store.Event.findOne({ url: `${params.url}?q=${query}` })
+			if (!event) {
+				return reply.getHttpError(404, 'Cannot find any events.')
+			}
+			return reply.status(200).send({ ...event.toObject() })
+		})
 
 	fastify.get('/upload', UploadOpts, async (request, reply) => {
 		request.log.info('Uploading a user profile picture.')

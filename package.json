@@ -7,8 +7,8 @@
     "test": "test"
   },
   "scripts": {
-	"test": "cross-env MONGODB_URL=mongodb://admin:pass@localhost:27017 jest --watch verbose",
-	"test:cov": "jest --coverage",
+    "test": "cross-env MONGODB_URL=mongodb://admin:pass@localhost:27017 MONGODB_NAME=03-Nejc-Rogelsek jest --watch verbose",
+    "test:cov": "jest --coverage",
     "start": "npm run build:ts && fastify start -l info dist/app.js",
     "build:ts": "tsc",
     "dev": "tsc && concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"tsc -w\" \"fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js\""
@@ -31,13 +31,15 @@
     "fastify-request-context": "^2.2.0",
     "fastify-sensible": "^3.1.0",
     "mongoose": "^6.0.12",
-    "node-cron": "^3.0.0"
+    "node-cron": "^3.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/node": "^15.0.0",
     "@types/node-cron": "^3.0.0",
     "@types/tap": "^15.0.0",
+    "@types/uuid": "^8.3.3",
     "concurrently": "^6.0.0",
     "cross-env": "^7.0.3",
     "fastify-tsconfig": "^1.0.1",

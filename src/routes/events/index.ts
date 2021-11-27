@@ -1,6 +1,7 @@
 import { FastifyPluginAsync } from "fastify"
 import { AddBody, AddOpts, BookEventBody, BookEventOpts, DeleteEventOpts, UpdateBody, UpdateOpts } from './types'
 import * as sgMail from '@sendgrid/mail'
+import { v4 as uuidv4 } from 'uuid'
 
 sgMail.setApiKey('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')
 
@@ -40,9 +41,12 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		if (!user) {
 			return reply.getHttpError(404, 'Cannot add event because no users are found')
 		}
+		let url: string = request.body.title.replaceAll(' ', '-')
+		url += `?q=${uuidv4()}`
 		const event = new fastify.store.Event({
 			...request.body,
 			user_id: user._id,
+			url,
 			created_at: new Date(),
 			updated_at: new Date(),
 		})
@@ -75,7 +79,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			<a href='http://localhost:3001/event/${request.body.title.replaceAll(' ', '-')}'>Verify your account</a>
 		`
 		}
-		process.env.NODE_ENV !== ' test' ? await sgMail.send(msg) : null
+		process.env.NODE_ENV === ' production' ? await sgMail.send(msg) : null
 		return reply.status(201).send({ ...event.toObject() })
 	})
 
@@ -98,8 +102,8 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		event.description = request.body.description
 		event.location = request.body.location
 		event.max_visitors = request.body.max_visitors
-		event.date_start = new Date(request.body.date_start)
-		event.time_start = new Date(request.body.time_start)
+		event.date_start = request.body.date_start
+		event.time_start = request.body.time_start
 		event.updated_at = new Date(Date.now())
 		const updatedEvent = await event.update()
 		if (!updatedEvent) {

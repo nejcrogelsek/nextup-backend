@@ -21,8 +21,9 @@ export interface IEventSchema {
 	location: string
 	max_visitors: number
 	user_id: mongoose.Schema.Types.ObjectId
-	date_start: Date
-	time_start: Date
+	date_start: string
+	time_start: string
+	url: string
 	created_at: Date
 	updated_at: Date
 }

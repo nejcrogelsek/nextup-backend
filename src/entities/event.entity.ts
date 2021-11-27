@@ -10,6 +10,7 @@ export const Event = new Schema<IEventSchema>({
 	date_start: String,
 	time_start: String,
 	user_id: { type: Schema.Types.ObjectId, ref: 'User' },
+	url: String,
 	created_at: Date,
 	updated_at: Date
 })
