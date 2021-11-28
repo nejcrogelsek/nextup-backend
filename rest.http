@@ -95,6 +95,15 @@ GET http://localhost:3000/public/upload HTTP/1.1
 GET http://localhost:3000/public/events HTTP/1.1
 
 ###
+POST http://localhost:3000/public/events/search HTTP/1.1
+Content-Type: application/json
+
+{
+	"search_term": "und",
+	"date_term": "17.12.2021"
+}
+
+###
 GET http://localhost:3000/public/events/url/gfdfhghgfjfhgjfh%3Fq=33726224-281d-4af1-b788-e98973dda587 HTTP/1.1
 
 ###

@@ -52,6 +52,22 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send(recentEvents)
 	})
 
+	fastify.post('/events/search', async (request, reply) => {
+		request.log.info('Search functionality: searching for requested events.')
+		const body = JSON.parse(JSON.stringify(request.body))
+		const events = await fastify.store.Event.find()
+		if (!events) {
+			return reply.status(200).send([])
+		}
+		let searchResults: IEvent[] = []
+		for (let i = 0; i < events.length; i++) {
+			if (body.search_term && events[i].location.toLowerCase().replaceAll(' ', '').includes(body.search_term.toLowerCase().replaceAll(' ', '')) || events[i].date_start === body.date_term) {
+				searchResults.push(events[i])
+			}
+		}
+		return reply.status(200).send(searchResults)
+	})
+
 	fastify.get('/events/:id', async (request, reply) => {
 		request.log.info('Get specific event.')
 		const params = JSON.parse(JSON.stringify(request.params))
