@@ -143,10 +143,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.post<{ Body: BookEventBody }>('/book', BookEventOpts, async (request, reply) => {
 		request.log.info('Adding new reservation.')
 		const user = JSON.parse(JSON.stringify(request.user))
-		const { event_id, user_id } = request.body
-		if (user.id !== user_id) {
-			return reply.getHttpError(401, 'Unauthorized access')
-		}
+		const { event_id } = request.body
 
 		const event = await fastify.store.Event.findOne({ _id: event_id })
 		if (!event) {

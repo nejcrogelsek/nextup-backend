@@ -65,6 +65,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 				searchResults.push(events[i])
 			}
 		}
+		searchResults.reverse()
 		return reply.status(200).send(searchResults)
 	})
 
