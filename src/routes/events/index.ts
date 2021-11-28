@@ -18,6 +18,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		request.log.info('Searching for events.')
 		const events = await fastify.store.Event.find()
 		if (!events) {
+			fastify.log.error('/events -> GET: Cannot find any events.')
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 		return reply.status(200).send(events)
@@ -28,6 +29,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		const user = JSON.parse(JSON.stringify(request.user))
 		const events = await fastify.store.Event.find({ user_id: user.id })
 		if (!events) {
+			fastify.log.error('/events/added-events -> GET: Cannot find any events.')
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 		return reply.status(200).send(events)
@@ -39,6 +41,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		const users = await fastify.store.User.find()
 		const user = await fastify.store.User.findOne({ _id: requestUser.id })
 		if (!user) {
+			fastify.log.error('/events -> POST: Cannot add event because no users are found.')
 			return reply.getHttpError(404, 'Cannot add event because no users are found')
 		}
 		let url: string = request.body.title.replaceAll(' ', '-')
@@ -53,6 +56,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 		const newEvent = await event.save()
 		if (!newEvent) {
+			fastify.log.error('/events -> POST: Cannot add new event.')
 			return reply.getHttpError(404, 'Cannot add new event.')
 		}
 
@@ -89,9 +93,11 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		const { _id, user_id } = request.body
 		const event = await fastify.store.Event.findOne({ _id })
 		if (!event) {
+			fastify.log.error('/events -> PATCH: Cannot find any events.')
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 		if (user.id !== user_id && user.id !== event.user_id) {
+			fastify.log.error('/events -> PATCH: Unauthorized access.')
 			return reply.getHttpError(401, 'Unauthorized access')
 		}
 
@@ -107,6 +113,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		event.updated_at = new Date(Date.now())
 		const updatedEvent = await event.update()
 		if (!updatedEvent) {
+			fastify.log.error('/events -> PATCH: Cannot update event.')
 			return reply.getHttpError(404, 'Cannot update event.')
 		}
 		return reply.status(201).send({ ...updatedEvent })
@@ -117,10 +124,12 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		const params = JSON.parse(JSON.stringify(request.params))
 		const event = await fastify.store.Event.findOne({ _id: params.id })
 		if (!event) {
+			fastify.log.error('/events/:id -> DELETE: Cannot find any users.')
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 		const removedEvent = await event.remove()
 		if (!removedEvent) {
+			fastify.log.error('/events/:id -> DELETE: Cannot delete event.')
 			return reply.getHttpError(404, 'Cannot delete event.')
 		}
 		return reply.status(200).send({ ...removedEvent.toObject() })
@@ -131,10 +140,12 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		const params = JSON.parse(JSON.stringify(request.params))
 		const reservation = await fastify.store.Reservation.findOne({ event_id: params.id })
 		if (!reservation) {
+			fastify.log.error('/events/reservations/:id -> DELETE: Cannot find any reservations.')
 			return reply.getHttpError(404, 'Cannot find any reservations.')
 		}
 		const removedReservation = await reservation.remove()
 		if (!removedReservation) {
+			fastify.log.error('/events/reservations/:id -> DELETE: Cannot delete reservation.')
 			return reply.getHttpError(404, 'Cannot delete reservation.')
 		}
 		return reply.status(200).send({ ...removedReservation.toObject() })
@@ -147,6 +158,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 		const event = await fastify.store.Event.findOne({ _id: event_id })
 		if (!event) {
+			fastify.log.error('/events/book -> POST: Cannot find any events.')
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 		const reservation = new fastify.store.Reservation({
@@ -157,6 +169,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 		const newReservation = reservation.save()
 		if (!newReservation) {
+			fastify.log.error('/events/book -> GET: Cannot add new reservation.')
 			return reply.getHttpError(404, 'Cannot add new reservation.')
 		}
 
@@ -178,6 +191,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		request.log.info('Searching for reservations.')
 		const reservations = await fastify.store.Reservation.find()
 		if (!reservations) {
+			fastify.log.error('/events/reservations -> GET: Cannot find any reservations.')
 			return reply.getHttpError(404, 'Cannot find any reservations.')
 		}
 		return reply.status(200).send(reservations)
@@ -190,6 +204,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		const event = await fastify.store.Event.findOne({ _id: params.id })
 
 		if (!event) {
+			fastify.log.error('/events/:id/visitors -> GET: Cannot find any events.')
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 

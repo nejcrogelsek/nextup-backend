@@ -7,6 +7,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		request.log.info('Searching for events.')
 		const events = await fastify.store.Event.find()
 		if (!events) {
+			fastify.log.error('/public/events -> GET: Cannot find any events.')
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 		return reply.status(200).send(events)
@@ -16,6 +17,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		request.log.info('Searching for upcoming events.')
 		const events = await fastify.store.Event.find()
 		if (!events) {
+			fastify.log.error('/public/events/upcoming -> GET: Cannot find any events.')
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 
@@ -36,6 +38,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		request.log.info('Searching for recent events.')
 		const events = await fastify.store.Event.find()
 		if (!events) {
+			fastify.log.error('/public/events/recent -> GET: Cannot find any events.')
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 
@@ -74,6 +77,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		const params = JSON.parse(JSON.stringify(request.params))
 		const event = await fastify.store.Event.findOne({ _id: params.id })
 		if (!event) {
+			fastify.log.error('/public/events/:id -> GET: Cannot find any events.')
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
 		return reply.status(200).send({ ...event.toObject() })
@@ -94,6 +98,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			const query = JSON.parse(JSON.stringify(request.query)).q
 			const event = await fastify.store.Event.findOne({ url: `${params.url}?q=${query}` })
 			if (!event) {
+				fastify.log.error('/public/events/url/:url -> GET: Cannot find any events.')
 				return reply.getHttpError(404, 'Cannot find any events.')
 			}
 			return reply.status(200).send({ ...event.toObject() })
@@ -103,6 +108,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		request.log.info('Uploading a user profile picture.')
 		const { url } = await fastify.generateUploadUrl()
 		if (!url) {
+			fastify.log.error('/public/upload -> GET: No daat received.')
 			return reply.getHttpError(404, 'No data received.')
 		}
 		return reply.status(200).send({ url: url })
