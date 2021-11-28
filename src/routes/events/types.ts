@@ -5,9 +5,9 @@ const AddRequest = Type.Object({
 	title: Type.String(),
 	location: Type.String(),
 	event_image: Type.String(),
-	max_visitors: Type.Number({ minimum: 1 }),
+	max_visitors: Type.Number({ minimum: 1, description: 'Invalid credentials.' }),
 	date_start: Type.String(),
-	time_start: Type.RegEx(/^([0-1]?[0-9]|2[0-3]).[0-5][0-9]$/),
+	time_start: Type.RegEx(/^([0-1]?[0-9]|2[0-3]).[0-5][0-9]$/, { description: 'Invalid credentials.' }),
 	description: Type.String()
 })
 
@@ -20,7 +20,7 @@ const AddResponse = Type.Object({
 	max_visitors: Type.Number(),
 	user_id: Type.String(),
 	date_start: Type.String(),
-	time_start: Type.RegEx(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
+	time_start: Type.String(),
 	url: Type.String(),
 	created_at: Type.String({ format: 'date-time' }),
 	updated_at: Type.String({ format: 'date-time' }),
@@ -42,9 +42,9 @@ const UpdateRequest = Type.Object({
 	title: Type.String(),
 	location: Type.String(),
 	event_image: Type.Optional(Type.String()),
-	max_visitors: Type.Number({ minimum: 1 }),
+	max_visitors: Type.Number({ minimum: 1, description: 'Invalid credentials.' }),
 	date_start: Type.String(),
-	time_start: Type.RegEx(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
+	time_start: Type.RegEx(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, { description: 'Invalid credentials.' }),
 	description: Type.String(),
 	user_id: Type.String()
 })

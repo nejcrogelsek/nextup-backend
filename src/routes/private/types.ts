@@ -3,7 +3,7 @@ import { RouteShorthandOptions } from 'fastify'
 
 const AccessTokenResponse = Type.Object({
 	_id: Type.String(),
-	email: Type.String({ format: 'email' }),
+	email: Type.String({ format: 'email', description: 'Invalid credentials.' }),
 	first_name: Type.String(),
 	last_name: Type.String(),
 	profile_image: Type.String(),
@@ -20,7 +20,7 @@ export const ProtectedRouteOpts: RouteShorthandOptions = {
 }
 
 const RefreshTokenRequest = Type.Object({
-	email: Type.String({ format: 'email' }),
+	email: Type.String({ format: 'email', description: 'Invalid credentials.' }),
 	id: Type.String()
 })
 
