@@ -47,7 +47,7 @@ DELETE http://localhost:3000/users/618bf2e85c5850226c82c343 HTTP/1.1
 ### RESERVATIONS
 GET http://localhost:3000/events/reservations HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzNzE2ODczMywiZXhwIjoxNjM3MTY5NjMzfQ.d6ukBXuN9QA4EsHiouKXqcc5WA7SSXCSyY0p5mCbHq4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzODIwNDI1NCwiZXhwIjoxNjM4MjA1MTU0fQ.pHjnSen-V5dfG0RNjT4eBNDfxA1Q0TDUJGMHtdJ0-Ug
 
 ###
 GET http://localhost:3000/events/reservations/61913f8432d3b4b03c4b572a HTTP/1.1
@@ -57,11 +57,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc
 ### EVENTS
 GET http://localhost:3000/events HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzODEyNDM1MiwiZXhwIjoxNjM4MTI1MjUyfQ.SKsiQFWbf04xVDkqbmktKyT0xJoFrjMdfXfB7z4bm9Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzODI3OTgxMywiZXhwIjoxNjM4MjgwNzEzfQ.MKtjsdU4d7DYxQxb7XvZgebz5HUGTBX9_An9bwOdC8g
 
 ###
-DELETE http://localhost:3000/events/61a3c8ae8fbd8a5089effa47 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzODEyNDM1MiwiZXhwIjoxNjM4MTI1MjUyfQ.SKsiQFWbf04xVDkqbmktKyT0xJoFrjMdfXfB7z4bm9Y
+DELETE http://localhost:3000/events/61a62a1946ede7c9f5070090 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzODI3OTgxMywiZXhwIjoxNjM4MjgwNzEzfQ.MKtjsdU4d7DYxQxb7XvZgebz5HUGTBX9_An9bwOdC8g
 
 ###
 GET http://localhost:3000/events/added-events HTTP/1.1
@@ -117,4 +117,4 @@ GET http://localhost:3000/public/events/upcoming HTTP/1.1
 GET http://localhost:3000/public/events/recent HTTP/1.1
 
 ###
-GET http://localhost:3000/public/events/619131fe32d3b4b03c4b56d1 HTTP/1.1
+GET http://localhost:3000/public/events/61a62a1946ede7c9f5070090 HTTP/1.1

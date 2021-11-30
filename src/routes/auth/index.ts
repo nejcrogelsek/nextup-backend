@@ -44,7 +44,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			<a href='${request.protocol}://${request.hostname}/auth/verify-email?token=${user.email_token}'>Verify your account</a>
 		`
 		}
-		process.env.NODE_ENV !== ' test' ? await sgMail.send(msg) : null
+		process.env.NODE_ENV === 'production' ? await sgMail.send(msg) : null
 		const token = fastify.generateJwt(user.email, user._id)
 		return reply.status(201).send({ user: newUser, token })
 	})
