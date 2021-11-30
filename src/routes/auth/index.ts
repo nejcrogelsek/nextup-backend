@@ -22,6 +22,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 		const newUser = await user.save()
 		if (!newUser) {
+			fastify.log.error('/auth/register -> POST: Cannot register new user.')
 			return reply.getHttpError('404', 'Cannot register new user.')
 		}
 		const msg = {
@@ -43,7 +44,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			<a href='${request.protocol}://${request.hostname}/auth/verify-email?token=${user.email_token}'>Verify your account</a>
 		`
 		}
-		process.env.NODE_ENV !== ' test' ? await sgMail.send(msg) : null
+		process.env.NODE_ENV === 'production' ? await sgMail.send(msg) : null
 		const token = fastify.generateJwt(user.email, user._id)
 		return reply.status(201).send({ user: newUser, token })
 	})
@@ -54,14 +55,17 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		console.log(request.body)
 		const user = await fastify.store.User.findOne({ email })
 		if (!user) {
+			fastify.log.error(`/auth/login -> POST: User with email ${email} does not exist.`)
 			return reply.getHttpError(404, `User with email ${email} does not exist.`)
 		}
 
 		if (user.confirmed === false) {
+			fastify.log.error('/auth/login -> POST: Please confirm your email address.')
 			return reply.getHttpError(404, 'Please confirm your email address.')
 		}
 		const isValid = await bcrypt.compare(password, user.password)
 		if (!isValid) {
+			fastify.log.error('/auth/login -> POST: Invalid credentials.')
 			return reply.getHttpError(404, 'Invalid credentials.')
 		}
 		const token = fastify.generateJwt(email, user._id)
@@ -83,6 +87,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			email_token: query.token
 		})
 		if (!user) {
+			fastify.log.error('/auth/verify-email -> GET: Token is invalid. Please contact us for assistance.')
 			return reply.getHttpError(404, 'Token is invalid. Please contact us for assistance.')
 		}
 		user.email_token = null
@@ -90,6 +95,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 		user.save()
 		if (!user) {
+			fastify.log.error('/auth/verify-email -> GET: Cannot verify this user.')
 			return reply.getHttpError('404', 'Cannot verify this user.')
 		}
 		return reply.status(302).redirect('http://localhost:3001/login?message="Your email successfully validated. Now you can login."')

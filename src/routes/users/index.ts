@@ -9,6 +9,7 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		request.log.info('Searching for users.')
 		const users = await fastify.store.User.find()
 		if (!users) {
+			fastify.log.error('/users -> GET: Cannot find any users.')
 			return reply.getHttpError(404, 'Cannot find any users.')
 		}
 		return reply.status(200).send(users)
@@ -19,6 +20,7 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		const params = JSON.parse(JSON.stringify(request.params))
 		const user = await fastify.store.User.findOne({ _id: params.id }).populate('events', Event) // 618befee0658295b7ef2f407
 		if (!user) {
+			fastify.log.error('/users/:id -> GET: Cannot find any users.')
 			return reply.getHttpError(404, 'Cannot find any users.')
 		}
 		return reply.status(200).send({ ...user.toObject() })
@@ -30,6 +32,7 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		const params = JSON.parse(JSON.stringify(request.params))
 		const user = await fastify.store.User.findOne({ _id: params.id })
 		if (!user) {
+			fastify.log.error('/users/:id -> PATCH: Cannot find any users.')
 			return reply.getHttpError(404, 'Cannot find any users.')
 		}
 
@@ -44,7 +47,8 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 		user.save((err, user) => {
 			if (err || !user) {
-				return reply.getHttpError('404', 'Cannot Update new user.')
+				fastify.log.error('/users/:id -> PATCH: Cannot update new user.')
+				return reply.getHttpError('404', 'Cannot update new user.')
 			}
 			return reply.status(201).send({ ...user.toObject() })
 		})
@@ -57,10 +61,12 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		const params = JSON.parse(JSON.stringify(request.params))
 		const user = await fastify.store.User.findOne({ _id: params.id })
 		if (!user) {
+			fastify.log.error('/users/:id -> DELETE: Cannot find any users.')
 			return reply.getHttpError(404, 'Cannot find any users.')
 		}
 		user.remove((err: Error, user: IUser) => {
 			if (err || !user) {
+				fastify.log.error('/users/:id -> DELETE: Cannot delete user.')
 				return reply.getHttpError(404, 'Cannot delete user.')
 			}
 			return reply.status(200).send({ ...user })

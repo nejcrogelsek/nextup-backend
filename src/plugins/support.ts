@@ -11,7 +11,8 @@ import { randomBytes } from 'crypto'
 import * as AWS from 'aws-sdk'
 import fastifyEnv from 'fastify-env'
 import fastifyCors from 'fastify-cors'
-import * as cron from 'node-cron'
+import * as schedule from 'node-schedule'
+import * as sgMail from '@sendgrid/mail'
 
 export interface SupportPluginOptions {
 	// Specify Support plugin options here
@@ -20,6 +21,10 @@ export interface SupportPluginOptions {
 // The use of fastify-plugin is required to be able
 // to export the decorators to the outer scope
 export default fp<SupportPluginOptions>(async (fastify, opts) => {
+	fastify.decorate('someSupport', (): string => {
+		return 'hugs'
+	})
+
 	fastify.register(fastifyEnv, {
 		dotenv: true,
 		schema: {
@@ -136,13 +141,34 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 	if (!db) throw new Error('Cannot connect to database.')
 
 	if (process.env.NODE_ENV !== 'production') {
-		cron.schedule('0 14 * * 1', () => { /* send email function */ })
+		schedule.scheduleJob('25 14 * * 2', async () => {
+			const msg = {
+				from: {
+					name: 'Nextup',
+					email: 'nejcrogelsek0@gmail.com'
+				},
+				to: 'nejc.rogelsek40@gmail.com',
+				subject: 'Nextup - upcoming event',
+				text: `
+				Hello. Event that you signed for is coming up tomorrow.
+				Check the event on the link below.
+			`,
+				html: `
+				<h1>Hello</h1>
+				<p>Event that you signed for is coming up tomorrow.</p>
+				<p>Check the event on the link below.</p>
+				<a href='http://localhost:3001/event/Eminem%3Fq=f39d13c3-6a95-4dca-9fe3-ffdc30ce9572'>Go to your event.</a>
+			`
+			}
+			process.env.NODE_ENV === 'production' ? await sgMail.send(msg) : null
+		})
 	}
 })
 
 // When using .decorate you have to specify added properties for Typescript
 declare module 'fastify' {
 	export interface FastifyInstance {
+		someSupport: () => { url: string }
 		generateJwt: (email: string, id: string) => string
 		generateUploadUrl: () => { url: string }
 		store: {

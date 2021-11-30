@@ -47,7 +47,7 @@ DELETE http://localhost:3000/users/618bf2e85c5850226c82c343 HTTP/1.1
 ### RESERVATIONS
 GET http://localhost:3000/events/reservations HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzNzE2ODczMywiZXhwIjoxNjM3MTY5NjMzfQ.d6ukBXuN9QA4EsHiouKXqcc5WA7SSXCSyY0p5mCbHq4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzODIwNDI1NCwiZXhwIjoxNjM4MjA1MTU0fQ.pHjnSen-V5dfG0RNjT4eBNDfxA1Q0TDUJGMHtdJ0-Ug
 
 ###
 GET http://localhost:3000/events/reservations/61913f8432d3b4b03c4b572a HTTP/1.1
@@ -57,7 +57,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc
 ### EVENTS
 GET http://localhost:3000/events HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5lamMucm9nZWxzZWs0MEBnbWFpbC5jb20iLCJpZCI6IjYxOGQxNzdiNTgzMWFkODVhNzFiMGUyOCIsImlhdCI6MTYzNjk3MDg4NywiZXhwIjoxNjM2OTcxNzg3fQ.gk5BcKcTy0WLBA4QZ5bZ7drtYgrXCEMT-Bkoaxtv_II
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzODI3OTgxMywiZXhwIjoxNjM4MjgwNzEzfQ.MKtjsdU4d7DYxQxb7XvZgebz5HUGTBX9_An9bwOdC8g
+
+###
+DELETE http://localhost:3000/events/61a62a1946ede7c9f5070090 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzODI3OTgxMywiZXhwIjoxNjM4MjgwNzEzfQ.MKtjsdU4d7DYxQxb7XvZgebz5HUGTBX9_An9bwOdC8g
 
 ###
 GET http://localhost:3000/events/added-events HTTP/1.1
@@ -67,7 +71,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5lamMuc
 ###
 POST http://localhost:3000/events HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5lamMucm9nZWxzZWs0MEBnbWFpbC5jb20iLCJpZCI6IjYxOGQxNzdiNTgzMWFkODVhNzFiMGUyOCIsImlhdCI6MTYzNjcxNzMyOCwiZXhwIjoxNjM2NzE4MjI4fQ.Jil5f5pI3cyJvkvTexZqlawjlE0j8a5toHfD9PaeN3s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzODAzNjc3MywiZXhwIjoxNjM4MDM3NjczfQ.gP0UO4TP7wvtp4xPClfMqg0PxRgndb_H5eufctYpn38
 
 {
 	"title": "Catch Santa Party",
@@ -75,9 +79,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5lamMuc
 	"location": "Under the tree",
 	"event_image": "/event5.jpg",
 	"max_visitors": 2,
-	"user_id": "618d177b5831ad85a71b0e28",
-	"date_start": "25/12/2021",
-	"time_start": "23:59"
+	"user_id": "618d1c266c2cd45459c4ab5a",
+	"date_start": "25.12.2021",
+	"time_start": "23.59"
 }
 
 ###
@@ -95,10 +99,22 @@ GET http://localhost:3000/public/upload HTTP/1.1
 GET http://localhost:3000/public/events HTTP/1.1
 
 ###
+POST http://localhost:3000/public/events/search HTTP/1.1
+Content-Type: application/json
+
+{
+	"search_term": "und",
+	"date_term": "17.12.2021"
+}
+
+###
+GET http://localhost:3000/public/events/url/gfdfhghgfjfhgjfh%3Fq=33726224-281d-4af1-b788-e98973dda587 HTTP/1.1
+
+###
 GET http://localhost:3000/public/events/upcoming HTTP/1.1
 
 ###
 GET http://localhost:3000/public/events/recent HTTP/1.1
 
 ###
-GET http://localhost:3000/public/events/619131fe32d3b4b03c4b56d1 HTTP/1.1
+GET http://localhost:3000/public/events/61a62a1946ede7c9f5070090 HTTP/1.1
