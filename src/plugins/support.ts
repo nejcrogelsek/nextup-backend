@@ -97,7 +97,7 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 		last_name: string,
 		url: string
 	): Promise<string> => {
-		if (process.env.NODE_ENV !== 'production') {
+		if (process.env.NODE_ENV === 'production') {
 			schedule.scheduleJob(`${time_start.split('.')[1]} ${time_start.split('.')[0]} ${(parseInt(date_start.split('.')[0]) - 1).toString()} ${date_start.split('.')[1]} *`, async () => {
 				const msg = {
 					from: {
@@ -114,7 +114,7 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 					<h1>Hello ${first_name} ${last_name}.</h1>
 					<p>Event that you signed for is coming up tomorrow.</p>
 					<p>Check the event on the link below.</p>
-					<a style={{background: #72B01D; font-weight: 700; padding: 5px 10px}} href='http://localhost:3001/event/${url}'>Go to event</a>
+					<a href='http://localhost:3001/event/${url}'>Go to event</a>
 				`
 				}
 				process.env.NODE_ENV === 'production' ? await sgMail.send(msg) : null
@@ -174,9 +174,9 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 
 	if (!db) throw new Error('Cannot connect to database.')
 
-	if (process.env.NODE_ENV === 'production') {
-		schedule.scheduleJob('59 19 * * 3', async () => {
-			console.log('CronJob deluje ponovno!')
+	if (process.env.NODE_ENV !== 'production') {
+		schedule.scheduleJob('59 20 * * 3', async () => {
+			console.log('CronJob deluje!')
 			const msg = {
 				from: {
 					name: 'Nextup',
@@ -195,7 +195,9 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 				<a href='http://localhost:3001/event/Eminem%3Fq=f39d13c3-6a95-4dca-9fe3-ffdc30ce9572'>Go to your event.</a>
 			`
 			}
-			process.env.NODE_ENV === 'production' ? await sgMail.send(msg) : null
+			console.log('CronJob deluje! 2')
+			process.env.NODE_ENV !== 'production' ? await sgMail.send(msg) : null
+			console.log('CronJob deluje! 3')
 		})
 	}
 })
