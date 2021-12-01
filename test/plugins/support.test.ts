@@ -7,7 +7,7 @@ test('someSupport() - testing', async () => {
 	await fastify.ready()
 
 	expect(fastify.someSupport()).toBe('hugs')
-
+	
 	await fastify.close()
 })
 

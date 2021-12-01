@@ -153,19 +153,32 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 	fastify.post<{ Body: BookEventBody }>('/book', BookEventOpts, async (request, reply) => {
 		request.log.info('Adding new reservation.')
-		const user = JSON.parse(JSON.stringify(request.user))
+		const requestUser = JSON.parse(JSON.stringify(request.user))
 		const { event_id } = request.body
-
 		const event = await fastify.store.Event.findOne({ _id: event_id })
+		const user = await fastify.store.User.findOne({ _id: requestUser.id })
 		if (!event) {
 			fastify.log.error('/events/book -> POST: Cannot find any events.')
 			return reply.getHttpError(404, 'Cannot find any events.')
 		}
+		if (!user) {
+			fastify.log.error('/events/book -> POST: Unauthorized access')
+			return reply.getHttpError(404, 'Unauthorized access')
+		}
 		const reservation = new fastify.store.Reservation({
 			event_id: event._id,
-			user_id: user.id,
+			user_id: user._id,
 			created_at: new Date()
 		})
+
+		fastify.generateCronJob(
+			event.date_start,
+			event.time_start,
+			user.email,
+			user.first_name,
+			user.last_name,
+			event.url
+		)
 
 		const newReservation = reservation.save()
 		if (!newReservation) {

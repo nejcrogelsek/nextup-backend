@@ -89,6 +89,40 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 		return fastify.jwt.sign({ email, id })
 	})
 
+	fastify.decorate('generateCronJob', async (
+		date_start: string,
+		time_start: string,
+		emailTo: string,
+		first_name: string,
+		last_name: string,
+		url: string
+	): Promise<string> => {
+		if (process.env.NODE_ENV !== 'production') {
+			schedule.scheduleJob(`${time_start.split('.')[1]} ${time_start.split('.')[0]} ${(parseInt(date_start.split('.')[0]) - 1).toString()} ${date_start.split('.')[1]} *`, async () => {
+				const msg = {
+					from: {
+						name: 'Nextup',
+						email: 'nejcrogelsek0@gmail.com'
+					},
+					to: emailTo,
+					subject: 'Nextup - upcoming event',
+					text: `
+					Hello ${first_name} ${last_name}. Event that you signed for is coming up tomorrow.
+					Check the event on the link below.
+				`,
+					html: `
+					<h1>Hello ${first_name} ${last_name}.</h1>
+					<p>Event that you signed for is coming up tomorrow.</p>
+					<p>Check the event on the link below.</p>
+					<a style={{background: #72B01D; font-weight: 700; padding: 5px 10px}} href='http://localhost:3001/event/${url}'>Go to event</a>
+				`
+				}
+				process.env.NODE_ENV === 'production' ? await sgMail.send(msg) : null
+			})
+		}
+		return 'success'
+	})
+
 	fastify.decorate('generateUploadUrl', async (): Promise<{ url: string }> => {
 		try {
 			const bucketName = process.env.AWS_BUCKET_NAME
@@ -140,8 +174,9 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 
 	if (!db) throw new Error('Cannot connect to database.')
 
-	if (process.env.NODE_ENV !== 'production') {
-		schedule.scheduleJob('25 14 * * 2', async () => {
+	if (process.env.NODE_ENV === 'production') {
+		schedule.scheduleJob('59 19 * * 3', async () => {
+			console.log('CronJob deluje ponovno!')
 			const msg = {
 				from: {
 					name: 'Nextup',
@@ -170,6 +205,14 @@ declare module 'fastify' {
 	export interface FastifyInstance {
 		someSupport: () => { url: string }
 		generateJwt: (email: string, id: string) => string
+		generateCronJob: (
+			date_start: string,
+			time_start: string,
+			emailTo: string,
+			first_name: string,
+			last_name: string,
+			url: string
+		) => string,
 		generateUploadUrl: () => { url: string }
 		store: {
 			User: mongoose.Model<IUser>,
