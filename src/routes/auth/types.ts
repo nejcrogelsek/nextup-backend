@@ -9,12 +9,12 @@ const RegisterRequest = Type.Object({
 })
 
 const RegisterResponse = Type.Object({
-	token: Type.String(),
 	user: Type.Object({
 		email: Type.String({ format: 'email' }),
 		profile_image: Type.String(),
 		first_name: Type.String(),
-		last_name: Type.String()
+		last_name: Type.String(),
+		email_token: Type.String()
 	}),
 })
 
@@ -34,11 +34,21 @@ const LoginRequest = Type.Object({
 	password: Type.RegEx(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { description: 'Invalid credentials.' })
 })
 
+const LoginResponse = Type.Object({
+	token: Type.String(),
+	user: Type.Object({
+		email: Type.String({ format: 'email' }),
+		profile_image: Type.String(),
+		first_name: Type.String(),
+		last_name: Type.String()
+	}),
+})
+
 export const LoginOpts: RouteShorthandOptions = {
 	schema: {
 		body: LoginRequest,
 		response: {
-			200: RegisterResponse
+			200: LoginResponse
 		}
 	}
 }

@@ -45,8 +45,7 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		`
 		}
 		process.env.NODE_ENV === 'production' ? await sgMail.send(msg) : null
-		const token = fastify.generateJwt(user.email, user._id)
-		return reply.status(201).send({ user: newUser, token })
+		return reply.status(201).send({ user: newUser.toObject() })
 	})
 
 	fastify.post<{ Body: LoginBody }>('/login', LoginOpts, async (request, reply) => {

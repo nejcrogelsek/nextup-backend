@@ -1,82 +1,63 @@
 import { build } from '../helper'
+import { IUserTest } from '../interfaces/user.interface'
+import { hashSync } from 'bcrypt'
 
-describe('authTests', () => {
+describe('AuthTests', () => {
 	let app = build()
+	let user: IUserTest
 
-	test('/auth (GET)', async () => {
+	test('/auth/register (POST)', async () => {
 		const res = await app.inject({
-			url: '/auth',
-			method: 'GET'
-		})
-		expect(res.statusCode === 200)
-		expect(200)
-	})
-
-	test('/auth/:id (GET)', async () => {
-		const res = await app.inject({
-			url: '/auth/618d1c266c2cd45459c4ab5a',
-			method: 'GET'
-		})
-		expect(res.statusCode === 200)
-		expect(JSON.parse(res.payload)).toEqual({
-			_id: expect.any(String),
-			profile_image: expect.any(String),
-			first_name: expect.any(String),
-			last_name: expect.any(String),
-			email: expect.any(String),
-			email_token: null,
-			confirmed: expect.any(Boolean),
-			password: expect.any(String),
-			events: [],
-			created_at: expect.any(String),
-			updated_at: expect.any(String),
-			__v: 0
-		})
-	})
-
-	test('/auth/:id (PATCH)', async () => {
-		const res = await app.inject({
-			url: '/auth/61a8cde194f632666d0f37b2',
-			method: 'PATCH',
+			url: '/auth/register',
+			method: 'POST',
 			payload: {
-				email: "nejcrogelsek80@gmail.com",
-				profile_image: "undefined",
-				first_name: "KR en",
-				last_name: "junior"
+				email: 'spela@gmail.com',
+				profile_image: 'spela.png',
+				first_name: 'Špela',
+				last_name: 'Špelasta',
+				password: hashSync('New123!', 10)
 			}
 		})
-		expect(res.statusCode === 200)
+		expect(res.statusCode === 201)
 		expect(JSON.parse(res.payload)).toEqual({
-			_id: expect.any(String),
-			profile_image: expect.any(String),
-			first_name: expect.any(String),
-			last_name: expect.any(String),
-			email: expect.any(String),
-			email_token: expect.any(String) || null || "",
-			confirmed: expect.any(Boolean),
-			password: expect.any(String),
-			created_at: expect.any(String),
-			updated_at: expect.any(String)
+			user: {
+				email: 'spela@gmail.com',
+				profile_image: 'spela.png',
+				first_name: 'Špela',
+				last_name: 'Špelasta',
+				email_token: expect.any(String)
+			}
 		})
+		user = JSON.parse(res.payload).user
 	})
 
-	test('/auth/:id (DELETE)', async () => {
+	test('/auth/verify-email (GET)', async () => {
 		const res = await app.inject({
-			url: '/auth/61a8cde194f632666d0f37b2',
-			method: 'DELETE'
+			url: `/auth/verify-email?token=${user.email_token}`,
+			method: 'GET',
+			query: { token: user.email_token }
 		})
 		expect(res.statusCode === 200)
+	})
+
+	test('/auth/login (POST)', async () => {
+		const res = await app.inject({
+			url: '/auth/login',
+			method: 'POST',
+			payload: {
+				email: user.email,
+				password: 'New123!'
+			}
+		})
+		expect(res.statusCode === 201)
 		expect(JSON.parse(res.payload)).toEqual({
-			_id: expect.any(String),
-			profile_image: expect.any(String),
-			first_name: expect.any(String),
-			last_name: expect.any(String),
-			email: expect.any(String),
-			email_token: expect.any(String) || null || "",
-			confirmed: expect.any(Boolean),
-			password: expect.any(String),
-			created_at: expect.any(String),
-			updated_at: expect.any(String)
+			token: expect.any(String),
+			user: {
+				email: 'spela@gmail.com',
+				profile_image: 'spela.png',
+				first_name: 'Špela',
+				last_name: 'Špelasta'
+			}
 		})
 	})
 
