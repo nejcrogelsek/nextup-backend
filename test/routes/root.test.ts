@@ -7,7 +7,7 @@ describe('RootTests', () => {
 		const res = await app.inject({
 			url: '/'
 		})
-		expect(JSON.parse(res.payload).toEqual({ root: true }))
+		expect(JSON.parse(res.payload)).toEqual({ root: true })
 	})
 
 })

@@ -6,7 +6,7 @@ POST http://localhost:3000/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-	"email":"nejcrogelsek0@gmail.com",
+	"email":"nejcrogelsek80@gmail.com",
 	"password": "Nejc123!",
 	"profile_image": "undefined",
 	"first_name": "Test",
@@ -32,13 +32,14 @@ GET http://localhost:3000/users HTTP/1.1
 GET http://localhost:3000/users/618d1c266c2cd45459c4ab5a HTTP/1.1
 
 ###
-PATCH http://localhost:3000/users/618d1c266c2cd45459c4ab5a HTTP/1.1
+PATCH http://localhost:3000/users/61a8cde194f632666d0f37b2 HTTP/1.1
 Content-Type: application/json
 
 {
-	"email": "kwmwmsopooqongscdi@mrvpt.com",
-	"first_name": "Neki",
-	"last_name": "Tanovi"
+	"email": "nejcrogelsek80@gmail.com",
+    "profile_image": "undefined.hihihihi",
+    "first_name": "super",
+    "last_name": "deluje"
 }
 
 ###
@@ -118,3 +119,6 @@ GET http://localhost:3000/public/events/recent HTTP/1.1
 
 ###
 GET http://localhost:3000/public/events/61a62a1946ede7c9f5070090 HTTP/1.1
+
+###
+GET http://localhost:3000 HTTP/1.1

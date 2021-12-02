@@ -3,16 +3,16 @@ import Fastify from 'fastify'
 import fp from 'fastify-plugin'
 import App from '../src/app'
 
-async function config() {
+const config = async () => {
 	return {}
 }
 
-function build() {
+const build = () => {
 	const app = Fastify()
 
 	beforeAll(async () => {
 		void app.register(fp(App), await config())
-		await app.ready();
+		await app.ready()
 	})
 
 	afterAll(async () => await app.close())

@@ -1,7 +1,6 @@
 import { FastifyPluginAsync } from "fastify"
 import { UpdateOpts, UpdateBody, DeleteEventOpts } from './types'
 import * as bcrypt from 'bcrypt'
-import { IUser } from "../../interfaces/user.interface"
 import { Event } from "../../entities/event.entity"
 
 const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
@@ -45,15 +44,13 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		user.last_name = request.body.last_name
 		user.updated_at = new Date()
 
-		user.save((err, user) => {
-			if (err || !user) {
-				fastify.log.error('/users/:id -> PATCH: Cannot update new user.')
-				return reply.getHttpError('404', 'Cannot update new user.')
-			}
-			return reply.status(201).send({ ...user.toObject() })
-		})
+		const savedUser = await user.save()
 
-		return reply
+		if (!savedUser) {
+			fastify.log.error('/users/:id -> PATCH: Cannot update new user.')
+			return reply.getHttpError('404', 'Cannot update new user.')
+		}
+		return reply.status(201).send({ ...savedUser.toObject() })
 	})
 
 	fastify.delete('/:id', DeleteEventOpts, async (request, reply) => {
@@ -64,14 +61,12 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			fastify.log.error('/users/:id -> DELETE: Cannot find any users.')
 			return reply.getHttpError(404, 'Cannot find any users.')
 		}
-		user.remove((err: Error, user: IUser) => {
-			if (err || !user) {
-				fastify.log.error('/users/:id -> DELETE: Cannot delete user.')
-				return reply.getHttpError(404, 'Cannot delete user.')
-			}
-			return reply.status(200).send({ ...user })
-		})
-		return reply
+		const deletedUser = await user.remove()
+		if (!deletedUser) {
+			fastify.log.error('/users/:id -> DELETE: Cannot delete user.')
+			return reply.getHttpError(404, 'Cannot delete user.')
+		}
+		return reply.status(200).send({ ...deletedUser.toObject() })
 	})
 }
 

@@ -174,9 +174,9 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 
 	if (!db) throw new Error('Cannot connect to database.')
 
-	if (process.env.NODE_ENV !== 'production') {
+	/*
+	if (process.env.NODE_ENV === 'production') {
 		schedule.scheduleJob('59 20 * * 3', async () => {
-			console.log('CronJob deluje!')
 			const msg = {
 				from: {
 					name: 'Nextup',
@@ -195,11 +195,10 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 				<a href='http://localhost:3001/event/Eminem%3Fq=f39d13c3-6a95-4dca-9fe3-ffdc30ce9572'>Go to your event.</a>
 			`
 			}
-			console.log('CronJob deluje! 2')
-			process.env.NODE_ENV !== 'production' ? await sgMail.send(msg) : null
-			console.log('CronJob deluje! 3')
+			process.env.NODE_ENV === 'production' ? await sgMail.send(msg) : null
 		})
 	}
+	*/
 })
 
 // When using .decorate you have to specify added properties for Typescript
