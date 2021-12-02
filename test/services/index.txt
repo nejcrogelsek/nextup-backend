@@ -1,9 +1,0 @@
-import * as dotenv from 'dotenv'
-import { connectDb } from './mongo'
-
-const configuration = dotenv.config()
-
-	(async () => {
-		await connectDb(configuration?.parsed?.MONGODB_URL as string, configuration?.parsed?.MONGODB_NAME as string)
-		console.log('Database connected.')
-	})()
