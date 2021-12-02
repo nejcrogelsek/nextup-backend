@@ -1,6 +1,5 @@
 import { build } from '../helper'
 import { IUserTest } from '../interfaces/user.interface'
-import { hashSync } from 'bcrypt'
 
 describe('AuthTests', () => {
 	let app = build()
@@ -15,7 +14,7 @@ describe('AuthTests', () => {
 				profile_image: 'spela.png',
 				first_name: 'Špela',
 				last_name: 'Špelasta',
-				password: hashSync('New123!', 10)
+				password: 'New123!'
 			}
 		})
 		expect(res.statusCode === 201)
