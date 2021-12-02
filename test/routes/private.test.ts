@@ -1,48 +1,29 @@
 import { build } from '../helper'
-import { IUserTest } from '../interfaces/user.interface'
 import { hashSync } from 'bcrypt'
+import { User } from '../../src/entities/user.entity'
+import * as mongoose from 'mongoose'
 
 describe('PrivateTests', () => {
 	let app = build()
-	let user: IUserTest
+	let token: string
 
-	test('/private/register (POST)', async () => {
-		const res = await app.inject({
-			url: '/private/register',
-			method: 'POST',
-			payload: {
-				email: 'spela@gmail.com',
-				profile_image: 'spela.png',
-				first_name: 'Špela',
-				last_name: 'Špelasta',
-				password: hashSync('New123!', 10)
-			}
-		})
-		expect(res.statusCode === 201)
-		expect(JSON.parse(res.payload)).toEqual({
-			user: {
-				email: 'spela@gmail.com',
-				profile_image: 'spela.png',
-				first_name: 'Špela',
-				last_name: 'Špelasta',
-				email_token: expect.any(String)
-			}
-		})
-		user = JSON.parse(res.payload).user
+	const UserModel = mongoose.model('User', User)
+	const user = new UserModel({
+		email: 'john@gmail.com',
+		first_name: 'John',
+		last_name: 'Doe',
+		profile_image: 'undefined',
+		password: hashSync('New123!', 10),
+		confirmed: true,
+		email_token: null,
+		created_at: new Date(),
+		updated_at: new Date()
 	})
+	user.save()
 
-	test('/private/verify-email (GET)', async () => {
+	test('/auth/login (POST)', async () => {
 		const res = await app.inject({
-			url: `/private/verify-email?token=${user.email_token}`,
-			method: 'GET',
-			query: { token: user.email_token }
-		})
-		expect(res.statusCode === 200)
-	})
-
-	test('/private/login (POST)', async () => {
-		const res = await app.inject({
-			url: '/private/login',
+			url: '/auth/login',
 			method: 'POST',
 			payload: {
 				email: user.email,
@@ -53,11 +34,47 @@ describe('PrivateTests', () => {
 		expect(JSON.parse(res.payload)).toEqual({
 			token: expect.any(String),
 			user: {
-				email: 'spela@gmail.com',
-				profile_image: 'spela.png',
-				first_name: 'Špela',
-				last_name: 'Špelasta'
+				email: 'john@gmail.com',
+				profile_image: 'undefined',
+				first_name: 'John',
+				last_name: 'Doe'
 			}
+		})
+		token = JSON.parse(res.payload).token
+	})
+
+	test('/private/refresh-token (POST)', async () => {
+		const res = await app.inject({
+			url: '/private/refresh-token',
+			method: 'POST',
+			headers: {
+				'authorization': `Bearer ${token}`
+			},
+			payload: {
+				id: user._id,
+				email: user.email,
+			}
+		})
+		expect(res.statusCode === 201)
+		expect(JSON.parse(res.payload)).toEqual({ access_token: expect.any(String) })
+	})
+
+	test('/private/protected (GET)', async () => {
+		const res = await app.inject({
+			url: `/private/protected`,
+			method: 'GET',
+			headers: {
+				'authorization': `Bearer ${token}`
+			}
+		})
+		expect(res.statusCode === 200)
+		expect(JSON.parse(res.payload)).toEqual({
+			_id: expect.any(String),
+			email: 'john@gmail.com',
+			first_name: 'John',
+			last_name: 'Doe',
+			profile_image: 'undefined',
+			confirmed: true
 		})
 	})
 
