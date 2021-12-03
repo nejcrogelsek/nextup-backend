@@ -44,7 +44,7 @@ const UpdateRequest = Type.Object({
 	event_image: Type.Optional(Type.String()),
 	max_visitors: Type.Number({ minimum: 1, description: 'Invalid credentials.' }),
 	date_start: Type.String(),
-	time_start: Type.RegEx(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, { description: 'Invalid credentials.' }),
+	time_start: Type.RegEx(/^([0-1]?[0-9]|2[0-3]).[0-5][0-9]$/, { description: 'Invalid credentials.' }),
 	description: Type.String(),
 	user_id: Type.String()
 })
