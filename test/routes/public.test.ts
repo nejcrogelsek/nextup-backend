@@ -29,9 +29,10 @@ describe('PublicTests', () => {
 		event_image: 'upcoming_event.png',
 		location: 'Ljubljana',
 		max_visitors: 10,
-		date_start: '5.12.2021',
+		date_start: '10.12.2021',
 		time_start: '20.00',
 		user_id: user._id,
+		url: 'Upcoming-Event?q=1234-5678',
 		created_at: new Date(),
 		updated_at: new Date()
 	})
@@ -46,6 +47,7 @@ describe('PublicTests', () => {
 		date_start: '5.11.2021',
 		time_start: '20.00',
 		user_id: user._id,
+		url: 'Recent-Event?q=1234-5678',
 		created_at: new Date(),
 		updated_at: new Date()
 	})
@@ -54,6 +56,7 @@ describe('PublicTests', () => {
 	console.log(user)
 	console.log(upcoming_event)
 	console.log(recent_event)
+	console.log(JSON.stringify(upcoming_event._id).split('"')[1])
 
 	test('/public/events (GET)', async () => {
 		const res = await app.inject({
@@ -71,21 +74,7 @@ describe('PublicTests', () => {
 		})
 		expect(res.statusCode === 200)
 		expect(200)
-		expect(JSON.parse(res.payload)).toEqual([{
-			_id: expect.any(String),
-			title: expect.any(String),
-			description: expect.any(String),
-			event_image: expect.any(String),
-			location: expect.any(String),
-			max_visitors: expect.any(Number),
-			date_start: expect.any(String),
-			time_start: expect.any(String),
-			user_id: expect.any(String),
-			url: expect.any(String),
-			created_at: expect.any(String),
-			updated_at: expect.any(String),
-			__v: 0
-		}])
+		expect(JSON.parse(res.payload)).toEqual([])
 	})
 
 	test('/public/events/recent (GET)', async () => {

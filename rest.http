@@ -21,7 +21,7 @@ POST http://localhost:3000/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-	"email":"kwmwmsopooqongscdi@mrvpt.com",
+	"email":"john@gmail.com",
 	"password": "New123!"
 }
 
@@ -48,7 +48,7 @@ DELETE http://localhost:3000/users/61a8da8359532bba38ba5c57 HTTP/1.1
 ### RESERVATIONS
 GET http://localhost:3000/events/reservations HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzODIwNDI1NCwiZXhwIjoxNjM4MjA1MTU0fQ.pHjnSen-V5dfG0RNjT4eBNDfxA1Q0TDUJGMHtdJ0-Ug
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWFhNDJjMDAwYTBmNGMzYWQ2MWE3NGYiLCJpYXQiOjE2Mzg1NDgyMjcsImV4cCI6MTYzODU0OTEyN30.Bk32M7ncNdrUSm5WE3RefkB6MrsHkuiuF7tvyXnFUzg
 
 ###
 GET http://localhost:3000/events/reservations/61913f8432d3b4b03c4b572a HTTP/1.1
@@ -118,7 +118,7 @@ GET http://localhost:3000/public/events/upcoming HTTP/1.1
 GET http://localhost:3000/public/events/recent HTTP/1.1
 
 ###
-GET http://localhost:3000/public/events/61a62a1946ede7c9f5070090 HTTP/1.1
+GET http://localhost:3000/public/events/61ab592802ac4817d30afffd HTTP/1.1
 
 ###
 GET http://localhost:3000 HTTP/1.1

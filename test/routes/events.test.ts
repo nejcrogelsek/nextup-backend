@@ -136,7 +136,7 @@ describe('EventsTests', () => {
 				'authorization': `Bearer ${token}`
 			}
 		})
-		expect(res.statusCode === 201)
+		expect(res.statusCode === 200)
 		expect(200)
 		expect(JSON.parse(res.payload)).toEqual([{
 			_id: expect.any(String),
@@ -163,7 +163,7 @@ describe('EventsTests', () => {
 				'authorization': `Bearer ${token}`
 			}
 		})
-		expect(res.statusCode === 201)
+		expect(res.statusCode === 200)
 		expect(200)
 		expect(JSON.parse(res.payload)).toEqual({
 			allowed: expect.any(Boolean)
@@ -178,7 +178,7 @@ describe('EventsTests', () => {
 				'authorization': `Bearer ${token}`
 			}
 		})
-		expect(res.statusCode === 201)
+		expect(res.statusCode === 200)
 		expect(200)
 		expect(JSON.parse(res.payload)).toEqual([{
 			_id: expect.any(String),
@@ -197,7 +197,7 @@ describe('EventsTests', () => {
 				'authorization': `Bearer ${token}`
 			}
 		})
-		expect(res.statusCode === 201)
+		expect(res.statusCode === 200)
 		expect(200)
 	})
 
@@ -220,7 +220,7 @@ describe('EventsTests', () => {
 				user_id: user._id
 			}
 		})
-		expect(res.statusCode === 201)
+		expect(res.statusCode === 200)
 		expect(JSON.parse(res.payload)).toEqual({
 			_id: expect.any(String),
 			title: 'title change',
