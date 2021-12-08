@@ -7,56 +7,55 @@ import { hashSync } from 'bcrypt'
 
 describe('PublicTests', () => {
 	let app = build()
+	let upcoming_event: any
 
-	const UserModel = mongoose.model('User', User)
-	const user = new UserModel({
-		email: 'john@gmail.com',
-		first_name: 'John',
-		last_name: 'Doe',
-		profile_image: 'undefined',
-		password: hashSync('New123!', 10),
-		confirmed: false,
-		email_token: randomBytes(64).toString('hex'),
-		created_at: new Date(),
-		updated_at: new Date()
+	beforeAll(async () => {
+		const UserModel = mongoose.model('User', User)
+		const user = new UserModel({
+			email: 'john@gmail.com',
+			first_name: 'John',
+			last_name: 'Doe',
+			profile_image: 'undefined',
+			password: hashSync('New123!', 10),
+			confirmed: false,
+			email_token: randomBytes(64).toString('hex'),
+			created_at: new Date(),
+			updated_at: new Date()
+		})
+		await user.save()
+
+		const EventModel = mongoose.model('Event', Event)
+		let new_upcoming_event = new EventModel({
+			title: 'Upcoming Event',
+			description: 'This is upcoming event.',
+			event_image: 'upcoming_event.png',
+			location: 'Ljubljana',
+			max_visitors: 10,
+			date_start: '10.12.2021',
+			time_start: '20.00',
+			user_id: user._id,
+			url: 'Upcoming-Event?q=1234-5678',
+			created_at: new Date(),
+			updated_at: new Date()
+		})
+		new_upcoming_event = await new_upcoming_event.save()
+		upcoming_event = new_upcoming_event
+
+		let new_recent_event = new EventModel({
+			title: 'Recent Event',
+			description: 'This is recent event.',
+			event_image: 'recent_event.png',
+			location: 'Ljubljana',
+			max_visitors: 10,
+			date_start: '5.11.2021',
+			time_start: '20.00',
+			user_id: user._id,
+			url: 'Recent-Event?q=1234-5678',
+			created_at: new Date(),
+			updated_at: new Date()
+		})
+		new_recent_event = await new_recent_event.save()
 	})
-	user.save()
-
-	const EventModel = mongoose.model('Event', Event)
-	const upcoming_event = new EventModel({
-		title: 'Upcoming Event',
-		description: 'This is upcoming event.',
-		event_image: 'upcoming_event.png',
-		location: 'Ljubljana',
-		max_visitors: 10,
-		date_start: '10.12.2021',
-		time_start: '20.00',
-		user_id: user._id,
-		url: 'Upcoming-Event?q=1234-5678',
-		created_at: new Date(),
-		updated_at: new Date()
-	})
-
-	upcoming_event.save()
-	const recent_event = new EventModel({
-		title: 'Recent Event',
-		description: 'This is recent event.',
-		event_image: 'recent_event.png',
-		location: 'Ljubljana',
-		max_visitors: 10,
-		date_start: '5.11.2021',
-		time_start: '20.00',
-		user_id: user._id,
-		url: 'Recent-Event?q=1234-5678',
-		created_at: new Date(),
-		updated_at: new Date()
-	})
-	recent_event.save()
-
-	console.log(user)
-	console.log(upcoming_event)
-	console.log(recent_event)
-	console.log(JSON.stringify(upcoming_event._id).split('"')[1])
 
 	test('/public/events (GET)', async () => {
 		const res = await app.inject({
@@ -74,7 +73,21 @@ describe('PublicTests', () => {
 		})
 		expect(res.statusCode === 200)
 		expect(200)
-		expect(JSON.parse(res.payload)).toEqual([])
+		expect(JSON.parse(res.payload)).toEqual([{
+			_id: expect.any(String),
+			title: expect.any(String),
+			description: expect.any(String),
+			event_image: expect.any(String),
+			location: expect.any(String),
+			max_visitors: expect.any(Number),
+			date_start: expect.any(String),
+			time_start: expect.any(String),
+			user_id: expect.any(String),
+			url: expect.any(String),
+			created_at: expect.any(String),
+			updated_at: expect.any(String),
+			__v: 0
+		}])
 	})
 
 	test('/public/events/recent (GET)', async () => {
@@ -135,10 +148,11 @@ describe('PublicTests', () => {
 
 	test('/public/events/url/:url (GET)', async () => {
 		const res = await app.inject({
-			url: `/public/events/${JSON.stringify(upcoming_event.url)}`,
+			url: `/public/events/${upcoming_event.url}`,
 			method: 'GET'
 		})
 		expect(res.statusCode === 200)
+		console.log(JSON.parse(res.payload))
 		expect(JSON.parse(res.payload)).toEqual({
 			_id: expect.any(String),
 			title: expect.any(String),
@@ -161,7 +175,7 @@ describe('PublicTests', () => {
 			url: '/public/events/search',
 			method: 'POST',
 			payload: {
-				search_term: 'upcoming'
+				search_term: 'lj'
 			}
 		})
 		expect(res.statusCode === 201)

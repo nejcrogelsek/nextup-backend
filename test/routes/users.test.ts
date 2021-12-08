@@ -6,20 +6,24 @@ import { hashSync } from 'bcrypt'
 
 describe('UsersTests', () => {
 	let app = build()
+	let user: any
 
-	const UserModel = mongoose.model('User', User)
-	const user = new UserModel({
-		email: 'john@gmail.com',
-		first_name: 'John',
-		last_name: 'Doe',
-		profile_image: 'undefined',
-		password: hashSync('New123!', 10),
-		confirmed: false,
-		email_token: randomBytes(64).toString('hex'),
-		created_at: new Date(),
-		updated_at: new Date()
+	beforeAll(async () => {
+		const UserModel = mongoose.model('User', User)
+		let initialUser = new UserModel({
+			email: 'john@gmail.com',
+			first_name: 'John',
+			last_name: 'Doe',
+			profile_image: 'undefined',
+			password: hashSync('New123!', 10),
+			confirmed: false,
+			email_token: randomBytes(64).toString('hex'),
+			created_at: new Date(),
+			updated_at: new Date()
+		})
+		initialUser = await initialUser.save()
+		user = initialUser
 	})
-	user.save()
 
 	test('/users (GET)', async () => {
 		const res = await app.inject({

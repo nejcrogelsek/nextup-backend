@@ -6,20 +6,24 @@ import * as mongoose from 'mongoose'
 describe('PrivateTests', () => {
 	let app = build()
 	let token: string
+	let user: any
 
-	const UserModel = mongoose.model('User', User)
-	const user = new UserModel({
-		email: 'john@gmail.com',
-		first_name: 'John',
-		last_name: 'Doe',
-		profile_image: 'undefined',
-		password: hashSync('New123!', 10),
-		confirmed: true,
-		email_token: null,
-		created_at: new Date(),
-		updated_at: new Date()
+	beforeAll(async () => {
+		const UserModel = mongoose.model('User', User)
+		let initialUser = new UserModel({
+			email: 'john@gmail.com',
+			first_name: 'John',
+			last_name: 'Doe',
+			profile_image: 'undefined',
+			password: hashSync('New123!', 10),
+			confirmed: true,
+			email_token: null,
+			created_at: new Date(),
+			updated_at: new Date()
+		})
+		initialUser = await initialUser.save()
+		user = initialUser
 	})
-	user.save()
 
 	test('/auth/login (POST)', async () => {
 		const res = await app.inject({
