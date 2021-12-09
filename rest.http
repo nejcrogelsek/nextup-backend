@@ -121,4 +121,4 @@ GET http://localhost:3000/public/events/recent HTTP/1.1
 GET http://localhost:3000/public/events/61ab592802ac4817d30afffd HTTP/1.1
 
 ###
-GET http://localhost:3000 HTTP/1.1
+GET http://localhost:3000/public/query HTTP/1.1

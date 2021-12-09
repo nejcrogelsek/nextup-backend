@@ -171,15 +171,6 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			created_at: new Date()
 		})
 
-		fastify.generateCronJob(
-			event.date_start,
-			event.time_start,
-			user.email,
-			user.first_name,
-			user.last_name,
-			event.url
-		)
-
 		const newReservation = reservation.save()
 		if (!newReservation) {
 			fastify.log.error('/events/book -> GET: Cannot add new reservation.')

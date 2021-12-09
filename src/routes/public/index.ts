@@ -1,5 +1,6 @@
 import { FastifyPluginAsync } from "fastify"
 import { IEvent } from "../../interfaces/event.interface"
+import { IUser } from "../../interfaces/user.interface"
 import { UploadOpts } from "./types"
 
 const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
@@ -108,10 +109,49 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		request.log.info('Uploading a user profile picture.')
 		const { url } = await fastify.generateUploadUrl()
 		if (!url) {
-			fastify.log.error('/public/upload -> GET: No daat received.')
+			fastify.log.error('/public/upload -> GET: No data received.')
 			return reply.getHttpError(404, 'No data received.')
 		}
 		return reply.status(200).send({ url: url })
+	})
+
+	fastify.get('/query', async (_, reply) => {
+		const events = await fastify.store.Event.find()
+		const reservations = await fastify.store.Reservation.find()
+		if (!events) {
+			fastify.log.error('/public/query -> GET: No data received.')
+			return reply.getHttpError(404, 'No data received.')
+		}
+		let tommorow_events: IEvent[] = []
+		for (let i = 0; i < events.length; i++) {
+			let newDate = events[i].date_start.replaceAll('.', '-').split('-')
+			if (new Date(`${newDate[2]}-${newDate[1]}-${newDate[0]}`).getTime() > new Date(Date.now()).getTime()) {
+				tommorow_events.push(events[i])
+			}
+		}
+		let usersIds: string[] = []
+		if (reservations) {
+			for (let i = 0; i < tommorow_events.length; i++) {
+				for (let j = 0; j < reservations.length; j++) {
+					if (reservations[j].event_id === tommorow_events[j]._id.toString().split('"')[0]) {
+						usersIds.push(reservations[j].user_id)
+					}
+				}
+			}
+		}
+		const uniq = [...new Set(usersIds)]
+		let users: IUser[] = []
+		for (let i = 0; i < uniq.length; i++) {
+			let findUser = await fastify.store.User.findOne({ _id: uniq[i] })
+			if (findUser) {
+				users.push(findUser)
+			}
+		}
+
+		for (let i = 0; i < users.length; i++) {
+			console.log(users)
+		}
+		return reply.status(200).send({ query: true })
 	})
 }
 

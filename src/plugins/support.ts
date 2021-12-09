@@ -89,40 +89,6 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 		return fastify.jwt.sign({ email, id })
 	})
 
-	fastify.decorate('generateCronJob', async (
-		date_start: string,
-		time_start: string,
-		emailTo: string,
-		first_name: string,
-		last_name: string,
-		url: string
-	): Promise<string> => {
-		if (process.env.NODE_ENV === 'production') {
-			schedule.scheduleJob(`${time_start.split('.')[1]} ${time_start.split('.')[0]} ${(parseInt(date_start.split('.')[0]) - 1).toString()} ${date_start.split('.')[1]} *`, async () => {
-				const msg = {
-					from: {
-						name: 'Nextup',
-						email: 'nejcrogelsek0@gmail.com'
-					},
-					to: emailTo,
-					subject: 'Nextup - upcoming event',
-					text: `
-					Hello ${first_name} ${last_name}. Event that you signed for is coming up tomorrow.
-					Check the event on the link below.
-				`,
-					html: `
-					<h1>Hello ${first_name} ${last_name}.</h1>
-					<p>Event that you signed for is coming up tomorrow.</p>
-					<p>Check the event on the link below.</p>
-					<a href='http://localhost:3001/event/${url}'>Go to event</a>
-				`
-				}
-				process.env.NODE_ENV === 'production' ? await sgMail.send(msg) : null
-			})
-		}
-		return 'success'
-	})
-
 	fastify.decorate('generateUploadUrl', async (): Promise<{ url: string }> => {
 		try {
 			const bucketName = process.env.AWS_BUCKET_NAME
@@ -174,31 +140,62 @@ export default fp<SupportPluginOptions>(async (fastify, opts) => {
 
 	if (!db) throw new Error('Cannot connect to database.')
 
-	/*
 	if (process.env.NODE_ENV === 'production') {
-		schedule.scheduleJob('59 20 * * 3', async () => {
-			const msg = {
-				from: {
-					name: 'Nextup',
-					email: 'nejcrogelsek0@gmail.com'
-				},
-				to: 'nejc.rogelsek40@gmail.com',
-				subject: 'Nextup - upcoming event',
-				text: `
-				Hello. Event that you signed for is coming up tomorrow.
-				Check the event on the link below.
-			`,
-				html: `
-				<h1>Hello</h1>
-				<p>Event that you signed for is coming up tomorrow.</p>
-				<p>Check the event on the link below.</p>
-				<a href='http://localhost:3001/event/Eminem%3Fq=f39d13c3-6a95-4dca-9fe3-ffdc30ce9572'>Go to your event.</a>
-			`
+		schedule.scheduleJob('0 7 * * *', async () => {
+			const events = await fastify.store.Event.find()
+			const reservations = await fastify.store.Reservation.find()
+			if (!events) {
+				return null
 			}
-			process.env.NODE_ENV === 'production' ? await sgMail.send(msg) : null
+			let tommorow_events: IEvent[] = []
+			for (let i = 0; i < events.length; i++) {
+				let newDate = events[i].date_start.replaceAll('.', '-').split('-')
+				if (new Date(`${newDate[2]}-${newDate[1]}-${newDate[0]}`).getTime() > new Date(Date.now()).getTime()) {
+					tommorow_events.push(events[i])
+				}
+			}
+			let usersIds: string[] = []
+			if (reservations) {
+				for (let i = 0; i < tommorow_events.length; i++) {
+					for (let j = 0; j < reservations.length; j++) {
+						if (reservations[j].event_id === tommorow_events[j]._id.toString().split('"')[0]) {
+							usersIds.push(reservations[j].user_id)
+						}
+					}
+				}
+			}
+			const uniq = [...new Set(usersIds)]
+			let users: IUser[] = []
+			for (let i = 0; i < uniq.length; i++) {
+				let findUser = await fastify.store.User.findOne({ _id: uniq[i] })
+				if (findUser) {
+					users.push(findUser)
+				}
+			}
+
+			for (let i = 0; i < users.length; i++) {
+				const msg = {
+					from: {
+						name: 'Nextup',
+						email: 'nejcrogelsek0@gmail.com'
+					},
+					to: users[i].email,
+					subject: 'Nextup - upcoming event',
+					text: `
+							Hello ${users[i].first_name} ${users[i].last_name}. Event that you signed for is coming up tomorrow.
+							Check the event on the link below.
+						`,
+					html: `
+							<h1>Hello ${users[i].first_name} ${users[i].last_name}.</h1>
+							<p>Event that you signed for is coming up tomorrow.</p>
+							<p>Check the tommorow events on the link below:</p>
+							<a href='http://localhost:3001/search'>Search events/a>
+						`
+				}
+				process.env.NODE_ENV === 'production' ? await sgMail.send(msg) : null
+			}
 		})
 	}
-	*/
 })
 
 // When using .decorate you have to specify added properties for Typescript
