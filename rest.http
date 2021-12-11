@@ -14,16 +14,21 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/auth/verify-email?token=d09e74cb636e209199ee6d6e92f9e826026df295ee36de370d19ac578a1b3a4568ede394706f97229d439aecc3240b19dac9cce150ea8c3c25aa00dc696df538 HTTP/1.1
+GET http://localhost:3000/auth/verify-email?token=f411e8bdfe2d072665db7531e1b8bb9a1791c8e05a85edd39dfac5b366d6d17a8e73fa708e9db3dd435c06b41e6795a522f20f913d91ea570c9a8db5df0e9012 HTTP/1.1
 
 ###
 POST http://localhost:3000/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-	"email":"john@gmail.com",
-	"password": "New123!"
+	"email":"nejc.rogelsek40@gmail.com",
+	"password": "Nejc123!"
 }
+
+### {
+###	"email":"john@gmail.com",
+###	"password": "New123!"
+###}
 
 ### USERS
 GET http://localhost:3000/users HTTP/1.1
@@ -48,12 +53,12 @@ DELETE http://localhost:3000/users/61a8da8359532bba38ba5c57 HTTP/1.1
 ### RESERVATIONS
 GET http://localhost:3000/events/reservations HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWFhNDJjMDAwYTBmNGMzYWQ2MWE3NGYiLCJpYXQiOjE2Mzg1NDgyMjcsImV4cCI6MTYzODU0OTEyN30.Bk32M7ncNdrUSm5WE3RefkB6MrsHkuiuF7tvyXnFUzg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWI0YTBhOTBmNGI4MzU2YzNmMWI2YzkiLCJpYXQiOjE2MzkyMjc1NzgsImV4cCI6MTYzOTIyODQ3OH0.DSwG3MHs88GpY1Pkz0F_wWLb8GQeqJE8GfjxNJ7BKi4
 
 ###
-GET http://localhost:3000/events/reservations/61913f8432d3b4b03c4b572a HTTP/1.1
+DELETE http://localhost:3000/events/reservations/61b4a0d642f9f68190d25546 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzNzE2ODczMywiZXhwIjoxNjM3MTY5NjMzfQ.d6ukBXuN9QA4EsHiouKXqcc5WA7SSXCSyY0p5mCbHq4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWI0OWQ2MDVmMTYyYjQ5MzIyOWY1M2IiLCJpYXQiOjE2MzkyMjY4NTIsImV4cCI6MTYzOTIyNzc1Mn0.duD-oav7Fv25SHtwD9o8WVypTVvezhyjEJ86G_Vm2xU
 
 ### EVENTS
 GET http://localhost:3000/events HTTP/1.1
@@ -67,12 +72,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc
 ###
 GET http://localhost:3000/events/added-events HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5lamMucm9nZWxzZWs0MEBnbWFpbC5jb20iLCJpZCI6IjYxOGQxNzdiNTgzMWFkODVhNzFiMGUyOCIsImlhdCI6MTYzNjcxNzMyOCwiZXhwIjoxNjM2NzE4MjI4fQ.Jil5f5pI3cyJvkvTexZqlawjlE0j8a5toHfD9PaeN3s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5lamMucm9nZWxzZWs0MEBnbWFpbC5jb20iLCJpZCI6IjYxYjRhZjVlMTQyY2VkYjBlMTcyNmRlYiIsImlhdCI6MTYzOTIzMjEwMiwiZXhwIjoxNjM5MjMzMDAyfQ.OfnkaB6XZ2Uss2TETy3Li4fUbjRAN3cgKRF7hCb0gnw
 
 ###
 POST http://localhost:3000/events HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzODAzNjc3MywiZXhwIjoxNjM4MDM3NjczfQ.gP0UO4TP7wvtp4xPClfMqg0PxRgndb_H5eufctYpn38
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5lamMucm9nZWxzZWs0MEBnbWFpbC5jb20iLCJpZCI6IjYxYjRhZjVlMTQyY2VkYjBlMTcyNmRlYiIsImlhdCI6MTYzOTIzMjEwMiwiZXhwIjoxNjM5MjMzMDAyfQ.OfnkaB6XZ2Uss2TETy3Li4fUbjRAN3cgKRF7hCb0gnw
 
 {
 	"title": "Catch Santa Party",
@@ -83,6 +88,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc
 	"user_id": "618d1c266c2cd45459c4ab5a",
 	"date_start": "25.12.2021",
 	"time_start": "23.59"
+}
+
+###
+PATCH http://localhost:3000/events HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5lamMucm9nZWxzZWs0MEBnbWFpbC5jb20iLCJpZCI6IjYxYjRhZjVlMTQyY2VkYjBlMTcyNmRlYiIsImlhdCI6MTYzOTIzMjEwMiwiZXhwIjoxNjM5MjMzMDAyfQ.OfnkaB6XZ2Uss2TETy3Li4fUbjRAN3cgKRF7hCb0gnw
+
+{
+	"_id": "61b4afb065b0c6eedba404d4",
+	"title": "nov naslov",
+	"location": "nova lokacija",
+	"event_image": "/event5.png",
+	"max_visitors": 100,
+	"date_start": "23.12.2021",
+	"time_start": "10.00",
+	"description": "Nov description",
+	"user_id": "61b4af5e142cedb0e1726deb"
 }
 
 ###
@@ -104,12 +126,11 @@ POST http://localhost:3000/public/events/search HTTP/1.1
 Content-Type: application/json
 
 {
-	"search_term": "und",
-	"date_term": "17.12.2021"
+	"search_term": "lj"
 }
 
 ###
-GET http://localhost:3000/public/events/url/gfdfhghgfjfhgjfh%3Fq=33726224-281d-4af1-b788-e98973dda587 HTTP/1.1
+GET http://localhost:3000/public/events/url/Upcoming-Event?q=1234-5678 HTTP/1.1
 
 ###
 GET http://localhost:3000/public/events/upcoming HTTP/1.1

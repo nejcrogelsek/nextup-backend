@@ -51,7 +51,6 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.post<{ Body: LoginBody }>('/login', LoginOpts, async (request, reply) => {
 		request.log.info('Logging user in application.')
 		const { email, password } = request.body
-		console.log(request.body)
 		const user = await fastify.store.User.findOne({ email })
 		if (!user) {
 			fastify.log.error(`/auth/login -> POST: User with email ${email} does not exist.`)

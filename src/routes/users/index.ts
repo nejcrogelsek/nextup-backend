@@ -26,7 +26,7 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.patch<{ Body: UpdateBody }>('/:id', UpdateOpts, async (request, reply) => {
-		request.log.info('Updateing user.')
+		request.log.info('Updating user.')
 		const { password } = request.body
 		const params = JSON.parse(JSON.stringify(request.params))
 		const user = await fastify.store.User.findOne({ _id: params.id })

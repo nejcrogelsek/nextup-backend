@@ -88,7 +88,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	})
 
 	fastify.patch<{ Body: UpdateBody }>('/', UpdateOpts, async (request, reply) => {
-		request.log.info('Updateing event.')
+		request.log.info('Updating event.')
 		const user = JSON.parse(JSON.stringify(request.user))
 		const { _id, user_id } = request.body
 		const event = await fastify.store.Event.findOne({ _id })
@@ -111,7 +111,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		event.date_start = request.body.date_start
 		event.time_start = request.body.time_start
 		event.updated_at = new Date(Date.now())
-		const updatedEvent = await event.update()
+		const updatedEvent = await event.updateOne()
 		if (!updatedEvent) {
 			fastify.log.error('/events -> PATCH: Cannot update event.')
 			return reply.getHttpError(404, 'Cannot update event.')

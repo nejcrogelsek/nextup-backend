@@ -7,7 +7,6 @@ describe('EventsTests', () => {
 	let app = build()
 	let token: string
 	let event: any
-	let reservation: any
 	let user: any
 
 	beforeAll(async () => {
@@ -102,7 +101,6 @@ describe('EventsTests', () => {
 			event_id: expect.any(String),
 			created_at: expect.any(String)
 		})
-		reservation = JSON.parse(res.payload)
 	})
 
 	test('/events (GET)', async () => {
@@ -213,26 +211,27 @@ describe('EventsTests', () => {
 				'authorization': `Bearer ${token}`
 			},
 			payload: {
-				_id: event._id.toString(),
+				_id: event._id,
 				title: 'title change',
 				location: 'Spremenjana lokacija',
 				event_image: '/event5.png',
 				max_visitors: 90,
-				date_start: '8.12.2021',
+				date_start: '20.12.2021',
 				time_start: '10.00',
 				description: 'description changed',
 				user_id: user._id
 			}
 		})
 		expect(res.statusCode === 200)
+		console.log(JSON.parse(res.payload))
 		expect(JSON.parse(res.payload)).toEqual({
-			_id: expect.any(String),
+			_id: event._id,
 			title: 'title change',
 			location: 'Spremenjana lokacija',
 			event_image: '/event5.png',
 			max_visitors: 90,
-			date_start: '8.12.2021',
-			time_start: '20.15',
+			date_start: '20.12.2021',
+			time_start: '10.00',
 			description: 'description changed',
 			user_id: user._id,
 			url: expect.any(String),
@@ -243,7 +242,7 @@ describe('EventsTests', () => {
 
 	test('/events/reservations/:id (DELETE)', async () => {
 		const res = await app.inject({
-			url: `/events/reservations/${reservation._id}`,
+			url: `/events/reservations/${event._id}`,
 			method: 'DELETE',
 			headers: {
 				'authorization': `Bearer ${token}`
@@ -254,7 +253,8 @@ describe('EventsTests', () => {
 			_id: expect.any(String),
 			user_id: expect.any(String),
 			event_id: expect.any(String),
-			created_at: expect.any(String)
+			created_at: expect.any(String),
+			__v: 0
 		})
 	})
 
