@@ -48,12 +48,19 @@ const UpdateRequest = Type.Object({
 	description: Type.String(),
 	user_id: Type.String()
 })
+const UpdateResponse = Type.Object({
+	acknowledged: Type.Boolean(),
+	modifiedCount: Type.Number(),
+	upsertedId: Type.Null(),
+	upsertedCount: Type.Number(),
+	matchedCount: Type.Number()
+})
 
 export const UpdateOpts: RouteShorthandOptions = {
 	schema: {
 		body: UpdateRequest,
 		response: {
-			201: AddResponse
+			201: UpdateResponse
 		}
 	}
 }

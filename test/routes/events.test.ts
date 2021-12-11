@@ -223,20 +223,13 @@ describe('EventsTests', () => {
 			}
 		})
 		expect(res.statusCode === 200)
-		console.log(JSON.parse(res.payload))
+		expect(200)
 		expect(JSON.parse(res.payload)).toEqual({
-			_id: event._id,
-			title: 'title change',
-			location: 'Spremenjana lokacija',
-			event_image: '/event5.png',
-			max_visitors: 90,
-			date_start: '20.12.2021',
-			time_start: '10.00',
-			description: 'description changed',
-			user_id: user._id,
-			url: expect.any(String),
-			created_at: expect.any(String),
-			updated_at: expect.any(String)
+			acknowledged: true,
+			modifiedCount: 1,
+			upsertedId: null,
+			upsertedCount: 0,
+			matchedCount: 1
 		})
 	})
 
@@ -269,13 +262,13 @@ describe('EventsTests', () => {
 		expect(res.statusCode === 200)
 		expect(JSON.parse(res.payload)).toEqual({
 			_id: expect.any(String),
-			title: 'My Event',
-			location: 'Home TV',
+			title: 'title change',
+			location: 'Spremenjana lokacija',
 			event_image: '/event5.png',
-			max_visitors: 66,
-			date_start: '6.12.2021',
-			time_start: '16.00',
-			description: 'This is my event description.',
+			max_visitors: 90,
+			date_start: '20.12.2021',
+			time_start: '10.00',
+			description: 'description changed',
 			user_id: JSON.parse(res.payload).user_id,
 			url: expect.any(String),
 			created_at: expect.any(String),

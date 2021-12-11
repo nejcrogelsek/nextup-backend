@@ -100,18 +100,34 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			fastify.log.error('/events -> PATCH: Unauthorized access.')
 			return reply.getHttpError(401, 'Unauthorized access')
 		}
-
+		let updateBody: any
 		if (request.body.event_image) {
-			event.event_image = request.body.event_image
+			updateBody = {
+				$set: {
+					title: request.body.title,
+					description: request.body.description,
+					location: request.body.location,
+					max_visitors: request.body.max_visitors,
+					date_start: request.body.date_start,
+					time_start: request.body.time_start,
+					updated_at: new Date(Date.now()),
+					event_image: request.body.event_image
+				}
+			}
+		} else {
+			updateBody = {
+				$set: {
+					title: request.body.title,
+					description: request.body.description,
+					location: request.body.location,
+					max_visitors: request.body.max_visitors,
+					date_start: request.body.date_start,
+					time_start: request.body.time_start,
+					updated_at: new Date(Date.now())
+				}
+			}
 		}
-		event.title = request.body.title
-		event.description = request.body.description
-		event.location = request.body.location
-		event.max_visitors = request.body.max_visitors
-		event.date_start = request.body.date_start
-		event.time_start = request.body.time_start
-		event.updated_at = new Date(Date.now())
-		const updatedEvent = await event.updateOne({ _id: _id })
+		const updatedEvent = await fastify.store.Event.updateOne({ _id: event._id }, updateBody)
 		if (!updatedEvent) {
 			fastify.log.error('/events -> PATCH: Cannot update event.')
 			return reply.getHttpError(404, 'Cannot update event.')
