@@ -45,7 +45,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			return reply.getHttpError(404, 'Cannot add event because no users are found')
 		}
 		let url: string = request.body.title.replaceAll(' ', '-')
-		url += `?q=${uuidv4()}`
+		url += `-${uuidv4()}`
 		const event = new fastify.store.Event({
 			...request.body,
 			user_id: user._id,
@@ -80,7 +80,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			<h1>Hello</h1>
 			<p>New event is added on our site.</p>
 			<p>Click on the link below to checkout new event.</p>
-			<a href='http://localhost:3001/event/${request.body.title.replaceAll(' ', '-')}'>Verify your account</a>
+			<a href='http://localhost:3001/event/${newEvent.url}'>Verify your account</a>
 		`
 		}
 		process.env.NODE_ENV === ' production' ? await sgMail.send(msg) : null
@@ -111,11 +111,12 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		event.date_start = request.body.date_start
 		event.time_start = request.body.time_start
 		event.updated_at = new Date(Date.now())
-		const updatedEvent = await event.updateOne()
+		const updatedEvent = await event.updateOne({ _id: _id })
 		if (!updatedEvent) {
 			fastify.log.error('/events -> PATCH: Cannot update event.')
 			return reply.getHttpError(404, 'Cannot update event.')
 		}
+		console.log(updatedEvent)
 		return reply.status(201).send({ ...updatedEvent })
 	})
 

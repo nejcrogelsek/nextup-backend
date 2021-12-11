@@ -87,17 +87,13 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.get('/events/url/:url',
 		{
 			schema: {
-				querystring: {
-					q: { type: 'string' }
-				},
 				params: {
 					url: { type: 'string' }
 				}
 			}
 		}, async (request, reply) => {
 			const params = JSON.parse(JSON.stringify(request.params))
-			const query = JSON.parse(JSON.stringify(request.query)).q
-			const event = await fastify.store.Event.findOne({ url: `${params.url}?q=${query}` })
+			const event = await fastify.store.Event.findOne({ url: `${params.url}` })
 			if (!event) {
 				fastify.log.error('/public/events/url/:url -> GET: Cannot find any events.')
 				return reply.getHttpError(404, 'Cannot find any events.')

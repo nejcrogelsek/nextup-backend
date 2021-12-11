@@ -34,7 +34,7 @@ describe('PublicTests', () => {
 			date_start: '25.12.2021',
 			time_start: '20.00',
 			user_id: user._id,
-			url: 'Upcoming-Event?q=1234-5678',
+			url: 'Upcoming-Event-1234-5678',
 			created_at: new Date(),
 			updated_at: new Date()
 		})
@@ -50,7 +50,7 @@ describe('PublicTests', () => {
 			date_start: '5.11.2021',
 			time_start: '20.00',
 			user_id: user._id,
-			url: 'Recent-Event?q=1234-5678',
+			url: 'Recent-Event-1234-9876',
 			created_at: new Date(),
 			updated_at: new Date()
 		})
