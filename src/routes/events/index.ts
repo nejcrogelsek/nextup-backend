@@ -132,7 +132,6 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			fastify.log.error('/events -> PATCH: Cannot update event.')
 			return reply.getHttpError(404, 'Cannot update event.')
 		}
-		console.log(updatedEvent)
 		return reply.status(201).send({ ...updatedEvent })
 	})
 
