@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from "fastify"
-import { AddBody, AddOpts, BookEventBody, BookEventOpts, DeleteEventOpts, UpdateBody, UpdateOpts } from './types'
+import { AddBody, AddOpts, BookEventBody, BookEventOpts, DeleteEventOpts, DeleteReservationOpts, GetOneOpts, GetOpts, UpdateBody, UpdateOpts } from './types'
 import * as sgMail from '@sendgrid/mail'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -14,7 +14,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		}
 	})
 
-	fastify.get('/', async (request, reply) => {
+	fastify.get('/', GetOpts, async (request, reply) => {
 		request.log.info('Searching for events.')
 		const events = await fastify.store.Event.find()
 		if (!events) {
@@ -24,7 +24,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send(events)
 	})
 
-	fastify.get('/added-events', async (request, reply) => {
+	fastify.get('/added-events', GetOpts, async (request, reply) => {
 		request.log.info('Searching for events that logged in user added.')
 		const user = JSON.parse(JSON.stringify(request.user))
 		const events = await fastify.store.Event.find({ user_id: user.id })
@@ -151,7 +151,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send({ ...removedEvent.toObject() })
 	})
 
-	fastify.delete('/reservations/:id', async (request, reply) => {
+	fastify.delete('/reservations/:id', DeleteReservationOpts, async (request, reply) => {
 		request.log.info('Deleting reservation.')
 		const params = JSON.parse(JSON.stringify(request.params))
 		const reservation = await fastify.store.Reservation.findOne({ event_id: params.id })
@@ -196,7 +196,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(201).send({ ...reservation.toObject() })
 	})
 
-	fastify.get('/reservations/:id', async (request, reply) => {
+	fastify.get('/reservations/:id', GetOneOpts, async (request, reply) => {
 		request.log.info('Checking if user already booked event.')
 		const user = JSON.parse(JSON.stringify(request.user))
 		const params = JSON.parse(JSON.stringify(request.params))
@@ -207,7 +207,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send({ allowed: false })
 	})
 
-	fastify.get('/reservations', async (request, reply) => {
+	fastify.get('/reservations', GetOpts, async (request, reply) => {
 		request.log.info('Searching for reservations.')
 		const reservations = await fastify.store.Reservation.find()
 		if (!reservations) {
@@ -217,7 +217,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send(reservations)
 	})
 
-	fastify.get('/:id/visitors', async (request, reply) => {
+	fastify.get('/:id/visitors', GetOneOpts, async (request, reply) => {
 		request.log.info('Checking if event is full.')
 		const params = JSON.parse(JSON.stringify(request.params))
 		const reservations = await fastify.store.Reservation.find({ event_id: params.id })

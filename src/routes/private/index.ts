@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from "fastify"
-import { RefreshTokenBody, ProtectedRouteOpts } from "./types"
+import { RefreshTokenBody, ProtectedRouteOpts, RefreshTokenOpts } from "./types"
 
 const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.addHook('onRequest', async (request, reply) => {
@@ -10,7 +10,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		}
 	})
 
-	fastify.post<{ Body: RefreshTokenBody }>('/refresh-token', async (request, reply) => {
+	fastify.post<{ Body: RefreshTokenBody }>('/refresh-token', RefreshTokenOpts, async (request, reply) => {
 		request.log.info('Request refresh token')
 		const access_token = fastify.jwt.sign(request.body)
 		return reply.status(201).send({
@@ -27,7 +27,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			fastify.log.error('/private/protected -> GET: No users found.')
 			return reply.getHttpError('404', 'No users found.')
 		}
-		return reply.status(200).send({ _id: user._id, first_name: user.first_name, last_name: user.last_name, profile_image: user.profile_image, confirmed: user.confirmed,email:user.email })
+		return reply.status(200).send({ _id: user._id, first_name: user.first_name, last_name: user.last_name, profile_image: user.profile_image, confirmed: user.confirmed, email: user.email })
 	})
 }
 

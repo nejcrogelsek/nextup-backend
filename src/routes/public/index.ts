@@ -1,10 +1,9 @@
 import { FastifyPluginAsync } from "fastify"
 import { IEvent } from "../../interfaces/event.interface"
-import { IUser } from "../../interfaces/user.interface"
-import { UploadOpts } from "./types"
+import { GetOneOpts, GetOpts, GetUrlOpts, UploadOpts } from "./types"
 
 const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-	fastify.get('/events', async (request, reply) => {
+	fastify.get('/events', GetOpts, async (request, reply) => {
 		request.log.info('Searching for events.')
 		const events = await fastify.store.Event.find()
 		if (!events) {
@@ -14,7 +13,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send(events)
 	})
 
-	fastify.get('/events/upcoming', async (request, reply) => {
+	fastify.get('/events/upcoming', GetOpts, async (request, reply) => {
 		request.log.info('Searching for upcoming events.')
 		const events = await fastify.store.Event.find()
 		if (!events) {
@@ -35,7 +34,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send(upcomingEvents)
 	})
 
-	fastify.get('/events/recent', async (request, reply) => {
+	fastify.get('/events/recent', GetOpts, async (request, reply) => {
 		request.log.info('Searching for recent events.')
 		const events = await fastify.store.Event.find()
 		if (!events) {
@@ -56,7 +55,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send(recentEvents)
 	})
 
-	fastify.post('/events/search', async (request, reply) => {
+	fastify.post('/events/search', GetOpts, async (request, reply) => {
 		request.log.info('Search functionality: searching for requested events.')
 		const body = JSON.parse(JSON.stringify(request.body))
 		const events = await fastify.store.Event.find()
@@ -73,7 +72,7 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send(searchResults)
 	})
 
-	fastify.get('/events/:id', async (request, reply) => {
+	fastify.get('/events/:id', GetOneOpts, async (request, reply) => {
 		request.log.info('Get specific event.')
 		const params = JSON.parse(JSON.stringify(request.params))
 		const event = await fastify.store.Event.findOne({ _id: params.id })
@@ -84,22 +83,15 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send({ ...event.toObject() })
 	})
 
-	fastify.get('/events/url/:url',
-		{
-			schema: {
-				params: {
-					url: { type: 'string' }
-				}
-			}
-		}, async (request, reply) => {
-			const params = JSON.parse(JSON.stringify(request.params))
-			const event = await fastify.store.Event.findOne({ url: `${params.url}` })
-			if (!event) {
-				fastify.log.error('/public/events/url/:url -> GET: Cannot find any events.')
-				return reply.getHttpError(404, 'Cannot find any events.')
-			}
-			return reply.status(200).send({ ...event.toObject() })
-		})
+	fastify.get('/events/url/:url', GetUrlOpts, async (request, reply) => {
+		const params = JSON.parse(JSON.stringify(request.params))
+		const event = await fastify.store.Event.findOne({ url: `${params.url}` })
+		if (!event) {
+			fastify.log.error('/public/events/url/:url -> GET: Cannot find any events.')
+			return reply.getHttpError(404, 'Cannot find any events.')
+		}
+		return reply.status(200).send({ ...event.toObject() })
+	})
 
 	fastify.get('/upload', UploadOpts, async (request, reply) => {
 		request.log.info('Uploading a user profile picture.')
@@ -109,45 +101,6 @@ const shared: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			return reply.getHttpError(404, 'No data received.')
 		}
 		return reply.status(200).send({ url: url })
-	})
-
-	fastify.get('/query', async (_, reply) => {
-		const events = await fastify.store.Event.find()
-		const reservations = await fastify.store.Reservation.find()
-		if (!events) {
-			fastify.log.error('/public/query -> GET: No data received.')
-			return reply.getHttpError(404, 'No data received.')
-		}
-		let tommorow_events: IEvent[] = []
-		for (let i = 0; i < events.length; i++) {
-			let newDate = events[i].date_start.replaceAll('.', '-').split('-')
-			if (new Date(`${newDate[2]}-${newDate[1]}-${newDate[0]}`).getTime() > new Date(Date.now()).getTime()) {
-				tommorow_events.push(events[i])
-			}
-		}
-		let usersIds: string[] = []
-		if (reservations) {
-			for (let i = 0; i < tommorow_events.length; i++) {
-				for (let j = 0; j < reservations.length; j++) {
-					if (reservations[j].event_id === tommorow_events[j]._id.toString().split('"')[0]) {
-						usersIds.push(reservations[j].user_id)
-					}
-				}
-			}
-		}
-		const uniq = [...new Set(usersIds)]
-		let users: IUser[] = []
-		for (let i = 0; i < uniq.length; i++) {
-			let findUser = await fastify.store.User.findOne({ _id: uniq[i] })
-			if (findUser) {
-				users.push(findUser)
-			}
-		}
-
-		for (let i = 0; i < users.length; i++) {
-			console.log(users)
-		}
-		return reply.status(200).send({ query: true })
 	})
 }
 

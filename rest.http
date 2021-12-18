@@ -29,7 +29,7 @@ Content-Type: application/json
 GET http://localhost:3000/users HTTP/1.1
 
 ###
-GET http://localhost:3000/users/618d1c266c2cd45459c4ab5a HTTP/1.1
+GET http://localhost:3000/users/61bdf7a1eafcea6a4cd73cfc HTTP/1.1
 
 ###
 PATCH http://localhost:3000/users/61a8cde194f632666d0f37b2 HTTP/1.1
@@ -48,7 +48,7 @@ DELETE http://localhost:3000/users/61a8da8359532bba38ba5c57 HTTP/1.1
 ### RESERVATIONS
 GET http://localhost:3000/events/reservations HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWI0YTBhOTBmNGI4MzU2YzNmMWI2YzkiLCJpYXQiOjE2MzkyMjc1NzgsImV4cCI6MTYzOTIyODQ3OH0.DSwG3MHs88GpY1Pkz0F_wWLb8GQeqJE8GfjxNJ7BKi4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWJkZjdhMWVhZmNlYTZhNGNkNzNjZmMiLCJpYXQiOjE2Mzk4NDM5MjEsImV4cCI6MTYzOTg0NDgyMX0.G2JlzGoe0fNDz2AY5oWmL60KTla58m0qHy7DUMjruIA
 
 ###
 DELETE http://localhost:3000/events/reservations/61b4a0d642f9f68190d25546 HTTP/1.1
@@ -58,21 +58,41 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ
 ### EVENTS
 GET http://localhost:3000/events HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzODI3OTgxMywiZXhwIjoxNjM4MjgwNzEzfQ.MKtjsdU4d7DYxQxb7XvZgebz5HUGTBX9_An9bwOdC8g
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWJkZjdhMWVhZmNlYTZhNGNkNzNjZmMiLCJpYXQiOjE2Mzk4NDM5NzMsImV4cCI6MTYzOTg0NDg3M30.DUvuGmow54hLLmTocn9k-efu9FD84ay9-WpXdH8oP7E
 
 ###
 DELETE http://localhost:3000/events/61a62a1946ede7c9f5070090 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzODI3OTgxMywiZXhwIjoxNjM4MjgwNzEzfQ.MKtjsdU4d7DYxQxb7XvZgebz5HUGTBX9_An9bwOdC8g
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWJkZjdhMWVhZmNlYTZhNGNkNzNjZmMiLCJpYXQiOjE2Mzk4NDI4NTUsImV4cCI6MTYzOTg0Mzc1NX0.oPQd1PI0tYuDXhUDjKN4ZvClajuS80ZP7I5Buxkf7pI
 
 ###
 GET http://localhost:3000/events/added-events HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5lamMucm9nZWxzZWs0MEBnbWFpbC5jb20iLCJpZCI6IjYxYjRhZjVlMTQyY2VkYjBlMTcyNmRlYiIsImlhdCI6MTYzOTIzMjEwMiwiZXhwIjoxNjM5MjMzMDAyfQ.OfnkaB6XZ2Uss2TETy3Li4fUbjRAN3cgKRF7hCb0gnw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWJkZjdhMWVhZmNlYTZhNGNkNzNjZmMiLCJpYXQiOjE2Mzk4NDI4NTUsImV4cCI6MTYzOTg0Mzc1NX0.oPQd1PI0tYuDXhUDjKN4ZvClajuS80ZP7I5Buxkf7pI
+
+###
+GET http://localhost:3000/events/reservations HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWJkZjdhMWVhZmNlYTZhNGNkNzNjZmMiLCJpYXQiOjE2Mzk4NDI4NTUsImV4cCI6MTYzOTg0Mzc1NX0.oPQd1PI0tYuDXhUDjKN4ZvClajuS80ZP7I5Buxkf7pI
+
+###
+GET http://localhost:3000/events/reservations/61bdf7a2eafcea6a4cd73d05 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWJkZjdhMWVhZmNlYTZhNGNkNzNjZmMiLCJpYXQiOjE2Mzk4NDI4NTUsImV4cCI6MTYzOTg0Mzc1NX0.oPQd1PI0tYuDXhUDjKN4ZvClajuS80ZP7I5Buxkf7pI
+
+###
+DELETE http://localhost:3000/events/reservations/61bdf7a2eafcea6a4cd73d01 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWJkZjdhMWVhZmNlYTZhNGNkNzNjZmMiLCJpYXQiOjE2Mzk4NDM5NzMsImV4cCI6MTYzOTg0NDg3M30.DUvuGmow54hLLmTocn9k-efu9FD84ay9-WpXdH8oP7E
+
+###
+GET http://localhost:3000/events/61bdf7a2eafcea6a4cd73d01/visitors HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWJkZjdhMWVhZmNlYTZhNGNkNzNjZmMiLCJpYXQiOjE2Mzk4NDI4NTUsImV4cCI6MTYzOTg0Mzc1NX0.oPQd1PI0tYuDXhUDjKN4ZvClajuS80ZP7I5Buxkf7pI
 
 ###
 POST http://localhost:3000/events HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWI0YjYzMjgzYTEwMjQwZTlkNzQ5YWUiLCJpYXQiOjE2MzkyMzMxMDAsImV4cCI6MTYzOTIzNDAwMH0.s7wC7xXzHO3JSKL0IwOkCpe6-FlH4x8rJoOzJD-yEcM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWQiOiI2MWJkZjdhMWVhZmNlYTZhNGNkNzNjZmMiLCJpYXQiOjE2Mzk4NDI4NTUsImV4cCI6MTYzOTg0Mzc1NX0.oPQd1PI0tYuDXhUDjKN4ZvClajuS80ZP7I5Buxkf7pI
 
 {
 	"title": "Catch Santa Party",
@@ -125,7 +145,10 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/public/events/url/Upcoming-Event?q=1234-5678 HTTP/1.1
+GET http://localhost:3000/public/events/url/My-Event-4fc96bef-ccdc-4f7f-bf56-5fa37db3573d HTTP/1.1
+
+###
+GET http://localhost:3000/public/events/search HTTP/1.1
 
 ###
 GET http://localhost:3000/public/events/upcoming HTTP/1.1
@@ -134,7 +157,7 @@ GET http://localhost:3000/public/events/upcoming HTTP/1.1
 GET http://localhost:3000/public/events/recent HTTP/1.1
 
 ###
-GET http://localhost:3000/public/events/61ab592802ac4817d30afffd HTTP/1.1
+GET http://localhost:3000/public/events/61bdf7a2eafcea6a4cd73d01 HTTP/1.1
 
 ###
 GET http://localhost:3000/public/query HTTP/1.1

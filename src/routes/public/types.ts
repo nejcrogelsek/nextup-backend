@@ -42,7 +42,7 @@ export const UploadOpts: RouteShorthandOptions = {
 const GetResponse = Type.Object({
 	_id: Type.String(),
 	title: Type.String(),
-	desciption: Type.String(),
+	description: Type.String(),
 	location: Type.String(),
 	event_image: Type.String(),
 	max_visitors: Type.Number({ minimum: 1 }),
@@ -56,7 +56,9 @@ const GetResponse = Type.Object({
 export const GetOpts: RouteShorthandOptions = {
 	schema: {
 		response: {
-			200: GetResponse
+			200: {
+				type: 'array'
+			}
 		}
 	}
 }
@@ -65,6 +67,17 @@ export const GetOneOpts: RouteShorthandOptions = {
 	schema: {
 		params: {
 			id: { type: 'string' }
+		},
+		response: {
+			200: GetResponse
+		}
+	}
+}
+
+export const GetUrlOpts: RouteShorthandOptions = {
+	schema: {
+		params: {
+			url: { type: 'string' }
 		},
 		response: {
 			200: GetResponse

@@ -48,6 +48,7 @@ const UpdateRequest = Type.Object({
 	description: Type.String(),
 	user_id: Type.String()
 })
+
 const UpdateResponse = Type.Object({
 	acknowledged: Type.Boolean(),
 	modifiedCount: Type.Number(),
@@ -100,11 +101,28 @@ export const DeleteEventOpts: RouteShorthandOptions = {
 	}
 }
 
-// not wokrking for get
+export const DeleteReservationOpts: RouteShorthandOptions = {
+	schema: {
+		params: {
+			id: { type: 'string' }
+		},
+		response: {
+			200: {
+				_id: Type.String(),
+				user_id: Type.String(),
+				event_id: Type.String(),
+				created_at: Type.String({ format: 'date-time' })
+			}
+		}
+	}
+}
+
 export const GetOpts: RouteShorthandOptions = {
 	schema: {
 		response: {
-			200: AddResponse
+			200: {
+				type: 'array'
+			}
 		}
 	}
 }
@@ -115,7 +133,9 @@ export const GetOneOpts: RouteShorthandOptions = {
 			id: { type: 'string' }
 		},
 		response: {
-			200: AddResponse
+			200: {
+				allowed: Type.Boolean()
+			}
 		}
 	}
 }

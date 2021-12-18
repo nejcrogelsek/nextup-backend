@@ -1,10 +1,10 @@
 import { FastifyPluginAsync } from "fastify"
-import { UpdateOpts, UpdateBody, DeleteEventOpts } from './types'
+import { UpdateOpts, UpdateBody, DeleteEventOpts, GetOneOpts, GetOpts } from './types'
 import * as bcrypt from 'bcrypt'
 import { Event } from "../../entities/event.entity"
 
 const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-	fastify.get('/', async (request, reply) => {
+	fastify.get('/', GetOpts, async (request, reply) => {
 		request.log.info('Searching for users.')
 		const users = await fastify.store.User.find()
 		if (!users) {
@@ -14,7 +14,7 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		return reply.status(200).send(users)
 	})
 
-	fastify.get('/:id', async (request, reply) => {
+	fastify.get('/:id', GetOneOpts, async (request, reply) => {
 		request.log.info('Get specific user.')
 		const params = JSON.parse(JSON.stringify(request.params))
 		const user = await fastify.store.User.findOne({ _id: params.id }).populate('events', Event) // 618befee0658295b7ef2f407

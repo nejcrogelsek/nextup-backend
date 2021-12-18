@@ -46,11 +46,12 @@ export const DeleteEventOpts: RouteShorthandOptions = {
 	}
 }
 
-// not working for get
 export const GetOpts: RouteShorthandOptions = {
 	schema: {
 		response: {
-			200: UpdateResponse
+			200: {
+				type: 'array'
+			}
 		}
 	}
 }
