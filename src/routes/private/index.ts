@@ -27,7 +27,7 @@ const events: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			fastify.log.error('/private/protected -> GET: No users found.')
 			return reply.getHttpError('404', 'No users found.')
 		}
-		return reply.status(200).send({ _id: user._id, first_name: user.first_name, last_name: user.last_name, profile_image: user.profile_image, confirmed: user.confirmed, email: user.email })
+		return reply.status(200).send({ _id: user._id, uid: user.uid, first_name: user.first_name, last_name: user.last_name, profile_image: user.profile_image, email: user.email })
 	})
 }
 

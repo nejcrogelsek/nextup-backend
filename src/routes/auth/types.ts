@@ -13,8 +13,7 @@ const RegisterResponse = Type.Object({
 		email: Type.String({ format: 'email' }),
 		profile_image: Type.String(),
 		first_name: Type.String(),
-		last_name: Type.String(),
-		email_token: Type.String()
+		last_name: Type.String()
 	}),
 })
 

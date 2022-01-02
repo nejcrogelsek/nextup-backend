@@ -1,12 +1,10 @@
 export interface IUser {
 	_id: string
+	uid: string
 	profile_image: string
 	first_name: string
 	last_name: string
 	email: string
-	email_token: string | null
-	confirmed: boolean
-	password: string
 	created_at: Date
 	updated_at: Date
 }
@@ -21,6 +19,7 @@ export interface IAccessToken {
 }
 export type IUserClient = {
 	_id: number
+	uid: string
 	email: string
 	first_name: string
 	last_name: string

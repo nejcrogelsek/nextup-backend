@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from "fastify"
 import { UpdateOpts, UpdateBody, DeleteEventOpts, GetOneOpts, GetOpts } from './types'
-import * as bcrypt from 'bcrypt'
 import { Event } from "../../entities/event.entity"
+import { deleteUser } from 'firebase/auth'
 
 const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.get('/', GetOpts, async (request, reply) => {
@@ -27,21 +27,14 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 
 	fastify.patch<{ Body: UpdateBody }>('/:id', UpdateOpts, async (request, reply) => {
 		request.log.info('Updating user.')
-		const { password } = request.body
 		const params = JSON.parse(JSON.stringify(request.params))
 		const user = await fastify.store.User.findOne({ _id: params.id })
 		if (!user) {
 			fastify.log.error('/users/:id -> PATCH: Cannot find any users.')
 			return reply.getHttpError(404, 'Cannot find any users.')
 		}
-
-		if (password) {
-			const hash = await bcrypt.hash(password, 10)
-			user.password = hash
-		}
-
-		user.first_name = request.body.first_name
-		user.last_name = request.body.last_name
+		if (request.body.first_name) user.first_name = request.body.first_name
+		if (request.body.last_name) user.last_name = request.body.last_name
 		user.updated_at = new Date()
 
 		const savedUser = await user.save()
@@ -61,6 +54,7 @@ const users: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 			fastify.log.error('/users/:id -> DELETE: Cannot find any users.')
 			return reply.getHttpError(404, 'Cannot find any users.')
 		}
+		await deleteUser(params.id)
 		const deletedUser = await user.remove()
 		if (!deletedUser) {
 			fastify.log.error('/users/:id -> DELETE: Cannot delete user.')

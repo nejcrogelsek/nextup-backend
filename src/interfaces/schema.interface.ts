@@ -2,13 +2,11 @@ import * as mongoose from "mongoose";
 
 export interface IUserSchema {
 	_id: string
+	uid: string
 	profile_image: string
 	first_name: string
 	last_name: string
 	email: string
-	email_token: string | null
-	confirmed: boolean
-	password: string
 	events: mongoose.Schema.Types.ObjectId
 	created_at: Date
 	updated_at: Date

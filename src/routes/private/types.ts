@@ -3,11 +3,11 @@ import { RouteShorthandOptions } from 'fastify'
 
 const AccessTokenResponse = Type.Object({
 	_id: Type.String(),
+	uid: Type.String(),
 	email: Type.String({ format: 'email', description: 'Invalid credentials.' }),
 	first_name: Type.String(),
 	last_name: Type.String(),
-	profile_image: Type.String(),
-	confirmed: Type.Boolean()
+	profile_image: Type.String()
 })
 
 

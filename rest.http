@@ -21,8 +21,8 @@ POST http://localhost:3000/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-	"email":"john@gmail.com",
-	"password": "New123!"
+	"email":"nejcrogelsek0@gmail.com",
+	"password": "Nejc123!"
 }
 
 ### USERS
@@ -32,14 +32,12 @@ GET http://localhost:3000/users HTTP/1.1
 GET http://localhost:3000/users/61bdf7a1eafcea6a4cd73cfc HTTP/1.1
 
 ###
-PATCH http://localhost:3000/users/61a8cde194f632666d0f37b2 HTTP/1.1
+PATCH http://localhost:3000/users/61d1bc06a10a806ec4c92df9 HTTP/1.1
 Content-Type: application/json
 
 {
-	"email": "nejcrogelsek80@gmail.com",
-    "profile_image": "undefined.hihihihi",
-    "first_name": "super",
-    "last_name": "deluje"
+    "first_name": "Nejc",
+    "last_name": "huhhuh"
 }
 
 ###
@@ -128,7 +126,7 @@ GET http://localhost:3000/events/4439843789e9fefe9 HTTP/1.1
 ### PRIVATE
 GET http://localhost:3000/private/protected HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imt3bXdtc29wb29xb25nc2NkaUBtcnZwdC5jb20iLCJpZCI6IjYxOGQxYzI2NmMyY2Q0NTQ1OWM0YWI1YSIsImlhdCI6MTYzNzI2NjY1OSwiZXhwIjoxNjM3MjY3NTU5fQ.s0jDlYU-_4Lehc0jgjAk0DEIEOo0ud-ex0Jg1lgigEE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5lamNyb2dlbHNlazBAZ21haWwuY29tIiwiaWQiOiI2MWQxYmMwNmExMGE4MDZlYzRjOTJkZjkiLCJpYXQiOjE2NDExMzU3NTgsImV4cCI6MTY0MTEzNjY1OH0.dCSPnTcQGdR_UgAlMPR4BeQo1kVvzpS6W1Ztig3ESlw
 
 ### PUBLIC
 GET http://localhost:3000/public/upload HTTP/1.1

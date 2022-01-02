@@ -1,7 +1,5 @@
 import { FastifyPluginAsync } from "fastify"
-import { RegisterOpts, RegisterBody, LoginOpts, LoginBody, VerifyEmailOpts } from './types'
-import * as bcrypt from 'bcrypt'
-import { randomBytes } from "crypto"
+import { RegisterOpts, RegisterBody, LoginOpts, LoginBody } from './types'
 import * as sgMail from '@sendgrid/mail'
 import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from 'firebase/auth'
 import { auth as firebaseAuth } from '../../config/firebase'
@@ -14,26 +12,33 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 		const { password, email } = request.body
 		const result = await createUserWithEmailAndPassword(firebaseAuth, email, password)
 		if (result.user) {
-			const hash = await bcrypt.hash(password, 10)
 			const user = new fastify.store.User({
-				...request.body,
-				password: hash,
-				confirmed: result.user.emailVerified,
-				email_token: randomBytes(64).toString('hex'),
+				uid: result.user.uid,
+				email: request.body.email,
+				first_name: request.body.first_name,
+				last_name: request.body.last_name,
+				profile_image: request.body.profile_image,
 				created_at: new Date(),
 				updated_at: new Date()
 			})
 
 			const newUser = await user.save()
 			if (!newUser) {
-				fastify.log.error('/auth/register -> POST: Cannot register new user.')
-				return reply.getHttpError('404', 'Cannot register new user.')
+				fastify.log.error('/auth/register -> POST: Cannot create new user to MongoDB.')
+				return reply.getHttpError('404', 'Cannot create new user to MongoDB.')
 			}
 			await sendEmailVerification(result.user)
-			return reply.status(201).send({ user: newUser.toObject() })
+			return reply.status(201).send({
+				user: {
+					email: result.user.email,
+					profile_image: request.body.profile_image,
+					first_name: request.body.first_name,
+					last_name: request.body.last_name
+				}
+			})
 		} else {
-			fastify.log.error('/auth/register -> POST: Cannot register new user.')
-			return reply.getHttpError('404', 'Cannot register new user.')
+			fastify.log.error('/auth/register -> POST: Invalid credentials.')
+			return reply.getHttpError('404', 'Invalid credentials.')
 		}
 	})
 
@@ -47,16 +52,11 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 				fastify.log.error(`/auth/login -> POST: User with email ${email} does not exist.`)
 				return reply.getHttpError(404, `User with email ${email} does not exist.`)
 			}
-			if (user.confirmed === false) {
+			if (result.user.emailVerified === false) {
 				fastify.log.error('/auth/login -> POST: Please confirm your email address.')
 				return reply.getHttpError(404, 'Please confirm your email address.')
 			}
-			const isValid = await bcrypt.compare(password, user.password)
-			if (!isValid) {
-				fastify.log.error('/auth/login -> POST: Invalid credentials.')
-				return reply.getHttpError(404, 'Invalid credentials.')
-			}
-			const token = fastify.generateJwt(email, user._id)
+			const token = fastify.generateJwt(user.email, user._id)
 			return reply.status(200).send({
 				token,
 				user: {
@@ -67,30 +67,9 @@ const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 				}
 			})
 		} else {
-			fastify.log.error(`/auth/login -> POST: User with email ${email} does not exist.`)
-			return reply.getHttpError(404, `User with email ${email} does not exist.`)
+			fastify.log.error('/auth/login -> POST: Invalid credentials.')
+			return reply.getHttpError(404, 'Invalid credentials.')
 		}
-	})
-
-	fastify.get('/verify-email', VerifyEmailOpts, async (request, reply) => {
-		request.log.info('Verifing user email address.')
-		const query = JSON.parse(JSON.stringify(request.query))
-		const user = await fastify.store.User.findOne({
-			email_token: query.token
-		})
-		if (!user) {
-			fastify.log.error('/auth/verify-email -> GET: Token is invalid. Please contact us for assistance.')
-			return reply.getHttpError(404, 'Token is invalid. Please contact us for assistance.')
-		}
-		user.email_token = null
-		user.confirmed = true
-
-		user.save()
-		if (!user) {
-			fastify.log.error('/auth/verify-email -> GET: Cannot verify this user.')
-			return reply.getHttpError('404', 'Cannot verify this user.')
-		}
-		return reply.status(302).redirect('http://localhost:3001/login?message="Your email successfully validated. Now you can login."')
 	})
 }
 

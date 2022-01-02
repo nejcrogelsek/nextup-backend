@@ -2,6 +2,7 @@ import { Schema } from 'mongoose'
 import { IUserSchema } from '../interfaces/schema.interface'
 
 export const User = new Schema<IUserSchema>({
+	uid: String,
 	profile_image: String,
 	first_name: String,
 	last_name: String,
@@ -10,9 +11,6 @@ export const User = new Schema<IUserSchema>({
 		index: true,
 		unique: true
 	},
-	email_token: String,
-	confirmed: Boolean,
-	password: String,
 	events: [{ type: Schema.Types.ObjectId, ref:'Event' }],
 	created_at: Date,
 	updated_at: Date
