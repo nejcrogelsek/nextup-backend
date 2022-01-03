@@ -1,5 +1,4 @@
 import { build } from '../helper'
-import { hashSync } from 'bcrypt'
 import { User } from '../../src/entities/user.entity'
 import * as mongoose from 'mongoose'
 
@@ -15,9 +14,6 @@ describe('PrivateTests', () => {
 			first_name: 'John',
 			last_name: 'Doe',
 			profile_image: 'undefined',
-			password: hashSync('New123!', 10),
-			confirmed: true,
-			email_token: null,
 			created_at: new Date(),
 			updated_at: new Date()
 		})
@@ -74,11 +70,11 @@ describe('PrivateTests', () => {
 		expect(res.statusCode === 200)
 		expect(JSON.parse(res.payload)).toEqual({
 			_id: expect.any(String),
+			uid: expect.any(String),
 			email: 'john@gmail.com',
 			first_name: 'John',
 			last_name: 'Doe',
-			profile_image: 'undefined',
-			confirmed: true
+			profile_image: 'undefined'
 		})
 	})
 

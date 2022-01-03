@@ -2,8 +2,6 @@ import { build } from '../helper'
 import { Event } from '../../src/entities/event.entity'
 import * as mongoose from 'mongoose'
 import { User } from '../../src/entities/user.entity'
-import { randomBytes } from 'crypto'
-import { hashSync } from 'bcrypt'
 
 describe('PublicTests', () => {
 	let app = build()
@@ -16,9 +14,6 @@ describe('PublicTests', () => {
 			first_name: 'John',
 			last_name: 'Doe',
 			profile_image: 'undefined',
-			password: hashSync('New123!', 10),
-			confirmed: false,
-			email_token: randomBytes(64).toString('hex'),
 			created_at: new Date(),
 			updated_at: new Date()
 		})
@@ -31,7 +26,7 @@ describe('PublicTests', () => {
 			event_image: 'upcoming_event.png',
 			location: 'Ljubljana',
 			max_visitors: 10,
-			date_start: '25.12.2021',
+			date_start: '20.1.2022',
 			time_start: '20.00',
 			user_id: user._id,
 			url: 'Upcoming-Event-1234-5678',
@@ -130,10 +125,8 @@ describe('PublicTests', () => {
 			date_start: expect.any(String),
 			time_start: expect.any(String),
 			user_id: expect.any(String),
-			url: expect.any(String),
 			created_at: expect.any(String),
-			updated_at: expect.any(String),
-			__v: 0
+			updated_at: expect.any(String)
 		})
 	})
 
@@ -162,10 +155,8 @@ describe('PublicTests', () => {
 			date_start: expect.any(String),
 			time_start: expect.any(String),
 			user_id: expect.any(String),
-			url: expect.any(String),
 			created_at: expect.any(String),
-			updated_at: expect.any(String),
-			__v: 0
+			updated_at: expect.any(String)
 		})
 	})
 

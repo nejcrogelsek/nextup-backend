@@ -10,33 +10,23 @@ describe('AuthTests', () => {
 			url: '/auth/register',
 			method: 'POST',
 			payload: {
-				email: 'spela@gmail.com',
-				profile_image: 'spela.png',
-				first_name: 'Špela',
-				last_name: 'Špelasta',
+				email: 'john@gmail.com',
+				profile_image: 'johndoe.png',
+				first_name: 'John',
+				last_name: 'Doe',
 				password: 'New123!'
 			}
 		})
 		expect(res.statusCode === 201)
 		expect(JSON.parse(res.payload)).toEqual({
 			user: {
-				email: 'spela@gmail.com',
-				profile_image: 'spela.png',
-				first_name: 'Špela',
-				last_name: 'Špelasta',
-				email_token: expect.any(String)
+				email: 'john@gmail.com',
+				profile_image: 'johndoe.png',
+				first_name: 'John',
+				last_name: 'Doe'
 			}
 		})
 		user = JSON.parse(res.payload).user
-	})
-
-	test('/auth/verify-email (GET)', async () => {
-		const res = await app.inject({
-			url: `/auth/verify-email?token=${user.email_token}`,
-			method: 'GET',
-			query: { token: user.email_token }
-		})
-		expect(res.statusCode === 200)
 	})
 
 	test('/auth/login (POST)', async () => {
@@ -52,12 +42,11 @@ describe('AuthTests', () => {
 		expect(JSON.parse(res.payload)).toEqual({
 			token: expect.any(String),
 			user: {
-				email: 'spela@gmail.com',
-				profile_image: 'spela.png',
-				first_name: 'Špela',
-				last_name: 'Špelasta'
+				email: 'john@gmail.com',
+				profile_image: 'johndoe.png',
+				first_name: 'John',
+				last_name: 'Doe'
 			}
 		})
 	})
-
 })

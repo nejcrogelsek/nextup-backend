@@ -1,5 +1,4 @@
 import { build } from '../helper'
-import { hashSync } from 'bcrypt'
 import { User } from '../../src/entities/user.entity'
 import * as mongoose from 'mongoose'
 
@@ -16,9 +15,6 @@ describe('EventsTests', () => {
 			first_name: 'John',
 			last_name: 'Doe',
 			profile_image: 'undefined',
-			password: hashSync('New123!', 10),
-			confirmed: true,
-			email_token: null,
 			created_at: new Date(),
 			updated_at: new Date()
 		})
