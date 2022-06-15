@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt'
 import { randomBytes } from "crypto"
 import * as sgMail from '@sendgrid/mail'
 
-sgMail.setApiKey('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')
+sgMail.setApiKey('notWorkingKey')
 
 const auth: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
 	fastify.post<{ Body: RegisterBody }>('/register', RegisterOpts, async (request, reply) => {
